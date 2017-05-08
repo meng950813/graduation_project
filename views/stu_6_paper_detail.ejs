@@ -1,0 +1,162 @@
+<% layout('template') %>
+
+<div class="in-detail">
+    <!-- 学生身份 ,当未上传或审核尚未通过时，显示上传区域-->
+  <%if(identity == 0) { %>
+    <div class="detail-content">
+     
+      <%= file_tip%> &nbsp;
+      <% if(pro_info.file_path != null) { %> 
+          <a class="btn btn-primary" href="../download?name=<%= pro_info.file_path%>">
+            <span class="glyphicon glyphicon-download-alt"></span>&nbsp;
+            <%= pro_info.file_name%>
+          </a>
+      <% } 
+      if(pro_info.status != 1){%>
+        <div class="detail-title line-height-4">
+          <input type="file" name="file" id="file"/>
+          <button id="upload" class="progress-button shrink" data-horizontal="">
+            <span class="content">点击上传</span>
+            <span class="progress">
+              <span class="progress-inner notransition"></span>
+            </span>
+          </button>
+        </div>
+      <% } %>
+    <div class="color-danger padding-b-15 ">设计（论文）文件指毕业设计说明书或毕业论文，包括封面、中外文摘和关键字、目录、正文、及参考文献等内容，格式建议：word，pdf</div>
+
+      <%= annex_tip%> &nbsp;
+      <% if(pro_info.annex_path != null) { %>
+          <a class="btn btn-primary" href="../download?name=<%= pro_info.annex_path%>">
+            <span class="glyphicon glyphicon-download-alt"></span>&nbsp;
+            <%= pro_info.annex_name%>
+          </a>
+      <% } 
+      if(pro_info.status != 1){%>
+        <div class="detail-title line-height-4">
+          <input type="file" name="annex" id="annex"/>
+          <button id="uploadAnnex" class="progress-button shrink" data-horizontal="">
+            <span class="content">点击上传</span>
+            <span class="progress">
+              <span class="progress-inner notransition"></span>
+            </span>
+          </button>
+        </div>
+      <% } %>
+      
+      <div class="color-danger padding-b-15">附件指毕业设计（论文）过程中产生的成果，包括图纸、视频等材料，格式建议：.rar/.zip，具体要求：
+      
+        <ul>
+          <li>▲ 音频：推荐使用 MP3格式</li>
+          <li>▲ 视频：推荐使用 WMV、 RM、 AVI(常用的编码格式)</li>
+          <li>▲ 图片：推荐使用 JPG 或 GIF格式</li>
+          <li>▲ 文本：推荐使用 PDF 或Word 格式</li>
+          <li>▲ 动画：推荐使用 flash、gif格式</li>
+          <li>▲ 文件大小最好小于50M</li>
+        </ul>
+        </div>
+    </div>
+
+    <% if(pro_info.status != 1){%>
+      <div class="detail-content">
+        <button id="sub-btn" data-id="<%=pro_info.id == undefined?0:pro_info.id%>" class="btn btn-block btn-success">确定提交</button>
+      </div>
+    <% } %>
+  
+    <div class="comment-content">
+      <p>审核导师：&nbsp; <%= tutor_name%>(<%= tutor_num%>)</p>
+      <p>导师评价：</p>
+      <textarea id="tutor_comments" style="resize:none" readonly="readonly" name="tutor_comments">
+        <%= pro_info.comments%>
+      </textarea>
+    </div>
+  <%} else{%>
+    <div class="comment-content">
+        <div><%= file_tip%>&nbsp;
+          <a class="btn btn-primary"  href="../download?name=<%= pro_info.file_path%>">
+            <span class="glyphicon glyphicon-download-alt"></span>
+            <%= pro_info.file_name%>
+          </a> 
+        </div>
+        <div><%= annex_tip%>&nbsp;
+          <a class="btn btn-primary"  href="../download?name=<%= pro_info.annex_path%>">
+            <span class="glyphicon glyphicon-download-alt"></span>
+            <%= pro_info.annex_name%>
+          </a> 
+        </div>
+      <% if(pro_info.status == 0){ %>
+        <p>审核结果：
+          <input name="reviewResult" id="review-pass" type="radio" value="1" checked /><label for="review-pass">通过</label>
+          &nbsp;
+          <input name="reviewResult" id="review-not-pass" type="radio" value="2" /><label for="review-not-pass">不通过</label>
+        </p>
+        <p>导师评价：</p>
+        <textarea id="tutor_comments" style="resize:none" name="tutor_comments"></textarea>
+
+        <button class="btn btn-block btn-success" data-id="<%= pro_info.id%>" id="review-btn">提交审核结果</button>
+
+      <% } else if(pro_info.status == 1){ %>
+        <p>审核结果：&nbsp;<span class='class-success'>审核通过</span>  </p>
+        <p>导师评价：</p>
+        <textarea id="tutor_comments" style="resize:none" class="border-success color-success"><%= pro_info.comments %></textarea>
+
+      <% } else{ %>
+        <p>审核结果：&nbsp;<span class='color-danger'>审核不通过</span> </p>
+        <p>导师评价：</p>
+        <textarea id="tutor_comments" style="resize:none" class="border-danger color-danger"><%= pro_info.comments %></textarea>
+      <% } %>
+   
+    </div>
+  <% } %>
+</div>
+
+<%include ./included/detail_dialog.ejs%>
+
+<% var uploadTips = `
+    <h4>设计（论文）文件指毕业设计说明书或毕业论文，包括封面、中外文摘和关键字、目录、正文、及参考文献等内容，格式建议：word，pdf</h4>
+  `,
+  uploadAnnexTips = `
+    <h4>附件指毕业设计（论文）过程中产生的成果，包括图纸、视频等材料，格式建议：.rar/.zip，具体要求：
+    </h4>
+    <ul>
+      <li>▲ 音频：推荐使用 MP3格式</li>
+      <li>▲ 视频：推荐使用 WMV、 RM、 AVI(常用的编码格式)</li>
+      <li>▲ 图片：推荐使用 JPG 或 GIF格式</li>
+      <li>▲ 文本：推荐使用 PDF 或Word 格式</li>
+      <li>▲ 动画：推荐使用 flash、gif格式</li>
+      <li>▲ 文件大小最好小于50M</li>
+    </ul>
+  `;
+%>
+
+
+
+<% var script;
+  if(identity == 0){
+    script = `
+      var upload = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner')),
+      
+      uploadAnnex = new upload_file($('#annex'),$('#uploadAnnex'),$('#uploadAnnex .progress-inner'));
+
+      var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+
+      var textAreaId = undefined,parentElem = undefined;
+
+      var stuUpload = new stuUploadContent(
+        $('#sub-btn'),
+        upload,
+        dialog,
+        "${upload_url}",
+        textAreaId,
+        parentElem,
+        uploadAnnex
+      );
+    `;
+  }else{
+    script = ` TODO `;
+  }
+%>
+
+
+<% block('script', script) -%>
+  

@@ -1,0 +1,71 @@
+  <!-- 学生身份 ,当未上传或审核尚未通过时，显示上传区域-->
+  <%if(identity == 0) { %>
+    <div class="detail-content">
+      <% if(pro_info.status != 1){%>
+        <div class="detail-title line-height-4">
+          <input type="file" name="file" id="file"/>
+          <button id="upload" class="progress-button shrink" data-horizontal="">
+            <span class="content">点击上传</span>
+            <span class="progress">
+              <span class="progress-inner notransition"></span>
+            </span>
+          </button>
+        </div>
+
+        <% if(pro_info.file_path != null) { %>
+          <p class="detail-title color-info">下载文档 ： 
+            <a class="btn btn-primary"  href="../download?name=<%= pro_info.file_path%>">
+              <span class="glyphicon glyphicon-download-alt"></span>&nbsp;
+              <%= pro_info.file_name%>
+            </a>
+          </p>
+        <% } %>
+      </div>
+
+      <div class="detail-content">
+        <button id="sub-btn" data-id="<%=pro_info.id == undefined?0:pro_info.id%>" class="btn btn-block btn-success">确定提交</button>
+      </div>
+    <% } %>
+  
+    <div class="comment-content">
+      <p>审核导师：&nbsp; <%= tutor_name%>(<%= tutor_num%>)</p>
+      <p>导师评价：</p>
+      <textarea id="tutor_comments" style="resize:none" readonly="readonly" name="tutor_comments">
+        <%= pro_info.comments%>
+      </textarea>
+    </div>
+  <%} else{%>
+    <div class="comment-content">
+      <%if(pro_info != null){ %>
+        <div>下载文档：
+          <a class="btn btn-primary"  href="../download?name=<%= pro_info.file_path%>">
+            <span class="glyphicon glyphicon-download-alt"></span>
+            <%= pro_info.file_name%>
+          </a> 
+        </div>
+      <% } %>
+      <% if(pro_info.status == 0){ %>
+        <p>审核结果：
+          <input name="reviewResult" id="review-pass" type="radio" value="1" checked /><label for="review-pass">通过</label>
+          &nbsp;
+          <input name="reviewResult" id="review-not-pass" type="radio" value="2" /><label for="review-not-pass">不通过</label>
+        </p>
+        <p>导师评价：</p>
+        <textarea id="tutor_comments" style="resize:none" name="tutor_comments"></textarea>
+
+        <button class="btn btn-block btn-success" data-id="<%= pro_info.id%>" id="review-btn">提交审核结果</button>
+        
+
+      <% } else if(pro_info.status == 1){ %>
+        <p>审核结果：&nbsp;<span class='class-success'>审核通过</span>  </p>
+        <p>导师评价：</p>
+        <textarea id="tutor_comments" style="resize:none" class="border-success color-success"><%= pro_info.comments %></textarea>
+
+      <% } else{ %>
+        <p>审核结果：&nbsp;<span class='color-danger'>审核不通过</span> </p>
+        <p>导师评价：</p>
+        <textarea id="tutor_comments" style="resize:none" class="border-danger color-danger"><%= pro_info.comments %></textarea>
+      <% } %>
+   
+    </div>
+  <% } %>

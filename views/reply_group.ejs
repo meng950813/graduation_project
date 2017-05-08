@@ -1,0 +1,58 @@
+<% layout('template') %>
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">相关提示</legend>
+  <ol>
+    <li>学生查看所在答辩组的信息</li>
+  </ol>
+</fieldset>
+	
+<% if(show == true) {%>
+	<div  class="promptText border-2px-warning">
+		<div class="reply-content">
+			<p>所在答辩组：<%= group_info.group_name%></p>
+			<p>答辩地点：<%= group_info.address%></p>
+			<p>答辩日期：<%= group_info.group_name%></p>
+			<p>答辩组组长：<%= tutor_info[group_info.leader]%></p>
+			<p>答辩组成员：
+				<% for(var item in tutor_info){%>
+					<%= tutor_info[item]%> &nbsp;&nbsp;
+				<%}%>
+			</p>
+			<h3 class="color-primary">答辩名单：</h3>
+		</div>
+		<div class="text-center">
+			<table class="show-process">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>学号</th>
+						<th>姓名</th>
+						<th>专业</th>
+						<th>课题名称</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% for(var i in stu_info) { %>
+					<tr>
+						<td><%= (parseInt(i,10)+1)%></td>
+						<td><%= stu_info[i].stu_num%></td>
+						<td><%= stu_info[i].stu_name%></td>
+						<td><%= stu_info[i].major_name%></td>
+						<td><%= stu_info[i].pro_name%></td>
+					</tr>
+					<% } %>
+				</tbody>
+			</table>
+			
+
+
+		</div>
+	</div>
+<% } else {%>
+	<div class="promptText boder-2px-warning">
+		<div class="reply-content">
+			还没有分组信息
+		</div>
+	</div>
+<% } %>

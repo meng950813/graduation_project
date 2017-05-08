@@ -1,0 +1,38 @@
+<% layout('template') %>
+
+
+<div class="in-detail">
+  
+  <%include ./included/detail_annex.ejs%>
+</div>
+
+<%include ./included/detail_dialog.ejs%>
+
+<% var script;
+  if(identity == 0){
+    script = `
+      var upload = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner')),
+      
+      uploadAnnex = new upload_file($('#annex'),$('#uploadAnnex'),$('#uploadAnnex .progress-inner'));
+
+      var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+
+      var textAreaId = undefined,parentElem = undefined;
+
+      var stuUpload = new stuUploadContent(
+        $('#sub-btn'),
+        upload,
+        dialog,
+        "/translate/upload",
+        textAreaId,
+        parentElem,
+        uploadAnnex
+      );
+    `;
+  }else{
+    script = ` TODO `;
+  }
+%>
+
+<% block('script', script) -%>
+  

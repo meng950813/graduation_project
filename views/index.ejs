@@ -1,0 +1,92 @@
+<% layout('template') %>
+
+<input type="file" name="file" id="file" />
+<button id="upload" class="progress-button" data-style="shrink" data-horizontal="">
+  <span class="content">上传</span>
+  <span class="progress">
+    <span class="progress-inner notransition"></span>
+  </span>
+</button>
+<span id="progress">0</span>
+
+<script>
+  (function () {
+  'use strict';
+
+  var file = document.querySelector('#file');
+  var upload = document.querySelector('#upload');
+
+  var progress_inner = upload.querySelector(".progress-inner");
+
+  var xhr = new XMLHttpRequest();
+
+  upload.addEventListener('click', uploadFile, false);
+
+  // 点击上传
+  function uploadFile(event) {
+    console.log(file.value);
+
+    if(file.value == "")
+      return;
+
+    upload.setAttribute("disabled","");
+    classie.remove(progress_inner,"notransition");
+    // 添加 state-loading 类
+    classie.add(upload,'state-loading');
+
+
+    console.dir(file);
+
+
+    var formData = new FormData();
+    formData.append('upload_file', file.files[0]);
+   
+    console.dir(formData);
+
+    xhr.onload = uploadSuccess;
+    xhr.upload.onprogress = setProgress;
+    xhr.open('post', '/upload', true);
+    xhr.send(formData);
+  }
+
+  // 成功上传
+  function uploadSuccess(result) {
+    if (xhr.readyState === 4) {
+      
+      console.log(xhr.responseText);
+      var  result = JSON.parse(xhr.responseText);
+      console.log(result);
+      
+      classie.remove(upload,'state-loading');
+      if(result.ok){
+        classie.add(upload,'state-success');
+        // console.log(xhr.responseText);
+        file.value="";
+      }
+      else{
+        classie.add(upload,'state-error');
+      }
+      setTimeout(stop,2000);
+    }
+  }
+
+  // 进度条
+  function setProgress(event) {
+    if (event.lengthComputable) {
+      var complete = Number.parseInt(event.loaded / event.total * 100);
+      // progress.innerHTML = complete + '%';
+      progress_inner.style.width = complete+"%";
+    }
+  }
+
+
+   function stop(){
+    progress_inner.style.width = "0%";
+    progress_inner.style.opacity = 1;
+    classie.add(progress_inner,"notransition");
+
+    upload.className="progress-button";
+    upload.removeAttribute("disabled");
+  }
+})();
+</script>

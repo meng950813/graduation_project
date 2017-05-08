@@ -1,0 +1,58 @@
+<% layout('template') %>
+
+<div class="in-detail">
+  <div class="detail-content">
+    <p class="detail-title">目的意义:</p>
+    <textarea style="resize:none" <%=readonly%> name="meaning" id="meaning"><%= pro_info.meaning%></textarea>
+  </div>
+
+  <div class="detail-content">
+    <p class="detail-title">国内外现状及存在的问题:</p>
+    <textarea style="resize:none" <%=readonly%> name="problem" id="problem"><%= pro_info.problem%></textarea>
+  </div>
+
+  <div class="detail-content">
+    <p class="detail-title">主要研究内容:</p>
+    <textarea style="resize:none"  <%=readonly%> name="research_content" id="research_content"><%= pro_info.research_content%></textarea>
+  </div>
+  
+  <div class="detail-content">
+    <p class="detail-title">研究方法、步骤及措施等:</p>
+    <textarea style="resize:none" <%=readonly%> name="methods" id="methods" ><%= pro_info.methods%></textarea>
+  </div>
+  
+  <%include ./included/detail_file.ejs%>
+</div>
+
+<%include ./included/detail_dialog.ejs%>
+
+<% var script;
+  if(identity == 0){
+    script = `
+      var upload_task = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner'));
+
+      var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+
+      var textAreaId = {
+        meaning         : null,
+        problem         : null,
+        research_content: null,
+        methods         : null
+      };
+
+      var stuUpload = new stuUploadContent(
+        $('#sub-btn'),
+        upload_task,
+        dialog,
+        "/open/upload",
+        textAreaId,
+        $(".in-detail")
+      );
+    `;
+  }else{
+    script = ` TODO `;
+  }
+%>
+
+<% block('script', script) -%>
+  

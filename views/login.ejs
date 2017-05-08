@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="cm做的本科生毕业设计进程及文档管理系统">
+  <meta name="keywords" content="cm,毕设,毕业设计,文档管理,系统">
+	<title>登录页</title>
+  
+  <link rel="stylesheet" href="/stylesheets/login.css">
+
+</head>
+<body>
+	<div id="login-form">
+		<div class="line">
+			<!-- <label for="usernum">账号：</label> -->
+			<div class="error">账号错误</div>
+			<input type="text" id="usernum" name="usernum" class="input" placeholder="学号/工号">
+		</div>
+		<div class="line">
+			<!-- <label for="pwd">密码：</label> -->
+			<div class="error">密码错误</div>
+			<input type="password" id="pwd" name="pwd" class="input" placeholder="密码">
+		</div>
+		<div class="line radio">
+			<input type="radio" name="identity" id="id-stu" value="0" checked="checked"><label for="id-stu">学生</label>
+			&nbsp;&nbsp;
+			<input type="radio" name="identity" id="id-tutor" value="1"><label for="id-tutor">导师</label>
+		</div>
+		<button id="submitBtn" class="input btn btn-block btn-primary">登录</button>
+	</div>
+	<script src="javascripts/classie.js"></script>
+	<script src="javascripts/login.js"></script>
+</body>
+</html>

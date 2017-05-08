@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/public.css">
+    <!-- <%-stylesheet%> -->
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="cm的本科生毕业设计进程及文档管理系统">
+    <meta name="keywords" content="cm,毕设,毕业设计,文档管理,系统">
+  </head>
+
+  <body>
+  	<%include ./included/header.ejs%>
+    <article id="article">
+    	<div class="container">
+    		<%include ./included/stu_nav.ejs%>
+				<div id="show-area">
+          <!-- 面包屑导航 -->
+          <% include ./included/breadcrumbs.ejs%>
+          
+				  <%-body -%>
+				</div>
+    	</div>
+    </article>
+    <%include ./included/footer.ejs%>
+    <script src="/javascripts/public.js"></script>
+    <%-scripts%>
+    <script>
+      <%-blocks.script%>
+    </script>
+  </body>
+</html>

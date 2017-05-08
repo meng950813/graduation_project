@@ -1,0 +1,56 @@
+<% layout('template') %>
+
+<!-- 提示性文字 -->
+<fieldset id="promptText">
+  <legend class="color-danger">相关提示</legend>
+  <ol>
+    <li>1、 任务书由指导教师在学生开题前填写。任务书是纲领性材料，学生需根据指导教师的任务书来完成自己的毕业设计（论文）。</li>
+  </ol>
+</fieldset>
+
+<!-- 进度显示区域 -->
+<table class="show-process">
+  <thead>
+    <tr>
+      <th>课题名称</th>
+      <th>课题类型</th>
+      <th>课题性质</th>
+      <th>指导老师</th>
+      <th>审核状态</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td class="pro-name">
+        pro_info.pro_name  
+      </td>
+      <td class="pro-type">
+        pro_info.pro_type
+      </td>
+      <td>
+        pro_info.pro_nature
+      </td>
+      <td>
+        pro_info.tutor_name  
+      </td>
+      <td>
+        <% if(pro_info.status == null) { %>
+          <h3 class="color-black">未上传</h3>
+          <a class="detail-btn" href="/task/detail">现在上传</a>
+        <% } else if(pro_info.status == 0){ %>
+          <h3 class="color-black">等待审核</h3>
+          <a class="detail-btn" href="/task/detail">查看详情</a>
+        <% } else if(pro_info.status == 1){ %>
+          <h3 class="color-success">审核通过</h3>
+          <a class="detail-btn" href="/task/detail">查看详情</a>
+        <% } else{ %>
+          <h3 class="color-danger">审核不通过</h3>
+          <a class="detail-btn" href="/task/detail">重新上传</a>
+        <% }%>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+

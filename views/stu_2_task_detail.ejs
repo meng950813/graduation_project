@@ -1,0 +1,53 @@
+<% layout('template') %>
+
+<div class="in-detail">
+  <div class="detail-content">
+    <p class="detail-title">内容及要求(包括原始数据、技术要求、达到的指标和应做的实验等):</p>
+    <textarea style="resize:none" <%=readonly%> name="aims" id="aims"><%= pro_info.task_aims%></textarea>
+  </div>
+
+  <div class="detail-content">
+    <p class="detail-title">完成后应交的作业(包括各种说明书、图纸等):</p>
+    <textarea style="resize:none" <%=readonly%> name="works" id="works"><%= pro_info.task_works%></textarea>
+  </div>
+
+  <div class="detail-content">
+    <p class="detail-title">完成日期及进度:</p>
+    <textarea style="resize:none"  <%=readonly%> name="process" id="process"><%= pro_info.task_process%></textarea>
+  </div>
+  
+  <div class="detail-content">
+    <p class="detail-title">主要参考资料(包括书刊名称、出版年月等):</p>
+    <textarea style="resize:none" <%=readonly%> name="reference" id="reference" ><%= pro_info.task_reference%></textarea>
+  </div>
+  
+  <%include ./included/detail_file.ejs%>
+</div>
+
+<%include ./included/detail_dialog.ejs%>
+
+
+<% var script = `
+  var upload_task = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner'));
+
+  var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+
+  var textAreaId = {
+    aims     : null,
+    works    : null,
+    process  : null,
+    reference: null
+  };
+
+  var stuUpload = new stuUploadContent(
+    $('#sub-btn'),
+    upload_task,
+    dialog,
+    "/task/upload",
+    textAreaId,
+    $(".in-detail")
+  );`
+%>
+
+<% block('script', script) -%>
+  

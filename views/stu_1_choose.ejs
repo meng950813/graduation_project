@@ -1,0 +1,111 @@
+<% layout('template') %>
+
+
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">相关提示</legend>
+  <ol>
+    <li>1、  学生根据自身特点选择课题，每人可选择三个志愿。</li>
+    <li>2、  在选题日期截止日期前，您可以修改您的志愿。</li>
+    <li>3、  您选择完课题后，对应课题教师即可以查看到您的信息。您的流程处于教师确认课题中，在教师最终确认您的选题前，您还可以重新选择您的课题。</li>
+    <li> 4、  如果教师已确认您的选题，则您的三个志愿选择界面将会自动消失，只显示您当前被教师确认的课题。</li>
+    <li>5、  如果志愿的选题状态为 "教师未选择您",表示您选择的这个课题对应教师已经选择了其他学生，为保证您能选择到您最想做的课题，请及时重新选择。</li>
+  </ol>
+</fieldset>
+
+<!-- 进度显示区域 -->
+<table id="show-process" class="show-process">
+  <thead>
+    <tr>
+      <th>课题名称</th>
+      <th>课题类型</th>
+      <th>课题性质</th>
+      <th>指导老师</th>
+      <th>课题状态</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <% 
+    /*查询结果长度>1,表示显示所有可选课题*/
+      if(pro_info.length > 1){
+        pro_info.forEach(function(item){ 
+    %>
+      <tr>
+        <td data=<%= item.publisher%> class="pro-name">
+          <%= item.pro_name %>
+        </td>
+        <td class="pro-type">
+          <%= item.pro_type %>
+        </td>
+        <td>
+          <%= item.pro_nature %>
+        </td>
+        <td>
+          <%= item.tutor_name %>
+        </td>
+        <td>
+          <% if(item.status == 0) {
+              if(item.apply_status == null){
+          %>
+            <h3 class="color-black">可选</h3>
+            <button class="btn btn-success selectProBtn" data=<%= item.pro_id%>>选择课题</button>  
+            <% } else if(item.apply_status == 0){ %>
+              <h3 class="color-warning">等待导师审核</h3>  
+            <% } else if(item.apply_status == 1){ %>
+              <h3 class="color-success">申请通过</h3>  
+            <% } else if(item.apply_status == 2){ %>
+              <h3 class="color-danger">申请被拒绝</h3>
+          <% 
+              }
+            } else{ 
+          %>
+            <h3 class="color-dannger">已被选</h3>            
+          <% }%>
+        </td>
+      </tr>
+    <% 
+        }) 
+      }
+      /* 表示已选课题，显示该课题 */
+      else{
+    %>
+       <tr>
+        <td class="pro-name">
+          <%= pro_info.pro_name %>
+        </td>
+        <td class="pro-type">
+          <%= pro_info.pro_type %>
+        </td>
+        <td>
+          <%= pro_info.pro_nature %>
+        </td>
+        <td>
+          <%= pro_info.tutor_name %>
+        </td>
+        <td>
+          <h3 class="color-success">导师同意</h3> 
+        </td>
+      </tr>
+    <%
+      }
+    %>
+   
+  </tbody>
+</table>
+
+<div id="animateDialog" class="animateDialog btn-default">
+  <div class="dialogTips">
+    确定申请课题 ：  
+    <p class="color-warning project-name">本科生毕业设计进程及文档管理系统？</p>
+    <h3 class="success color-success">申请成功,等待导师审核！</h3>
+    <h3 class="fail color-danger">申请失败,请稍后再试</h3>
+  </div>
+  <div class="dialogOptions">
+    <button class="btn btn-danger close-btn">关闭</button>
+    <button class="btn btn-success submit-btn">就是你了</button>
+  </div>
+</div>
+
+<% script('javascripts/chooseProject.js') -%>

@@ -1,0 +1,52 @@
+<% layout('template') %>
+
+<div class="in-detail">
+  <div class="detail-content">
+    <p class="detail-title">毕业设计的主要工作内容和计划进度：</p>
+    <textarea style="resize:none" <%=readonly%> name="plan" id="plan"><%= pro_info.plan%></textarea>
+  </div>
+
+  <div class="detail-content">
+    <p class="detail-title">目前已完成工作情况：</p>
+    <textarea style="resize:none" <%=readonly%> name="finished" id="finished"><%= pro_info.finished%></textarea>
+  </div>
+
+  <div class="detail-content">
+    <p class="detail-title">存在的主要问题和解决方案：</p>
+    <textarea style="resize:none"  <%=readonly%> name="problem" id="problem"><%= pro_info.problem%></textarea>
+  </div>
+
+  <%include ./included/detail_file.ejs%>
+</div>
+
+<%include ./included/detail_dialog.ejs%>
+
+<% var script;
+  if(identity == 0){
+    script = `
+      var upload = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner'));
+
+      var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+
+      var textAreaId = {
+        plan        : null,
+        finished    : null,
+        problem     : null
+      };
+
+      var stuUpload = new stuUploadContent(
+        $('#sub-btn'),
+        upload,
+        dialog,
+        "/middle/upload",
+        textAreaId,
+        $(".in-detail")
+      );
+    `;
+  }else{
+    script = ` TODO `;
+  }
+%>
+
+<% block('script', script) -%>
+  
