@@ -27,26 +27,44 @@
 <%include ./included/detail_dialog.ejs%>
 
 
-<% var script = `
-  var upload_task = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner'));
+<% var script;
+  if(identity == 0 && pro_info.status != 1){
+    script = `
+      var upload_task = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner'));
 
-  var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+      var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
 
-  var textAreaId = {
-    aims     : null,
-    works    : null,
-    process  : null,
-    reference: null
-  };
+      var textAreaId = {
+        aims     : null,
+        works    : null,
+        process  : null,
+        reference: null
+      };
 
-  var stuUpload = new stuUploadContent(
-    $('#sub-btn'),
-    upload_task,
-    dialog,
-    "/task/upload",
-    textAreaId,
-    $(".in-detail")
-  );`
+      var stuUpload = new stuUploadContent(
+        $('#sub-btn'),
+        upload_task,
+        dialog,
+        "/task/upload",
+        textAreaId,
+        $(".in-detail")
+      );`
+  }else if(identity == 1 && pro_info.status != 1){
+    script = `
+      var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn")),
+      
+      url = '/tutor/review';
+      
+      var review = new uploadReview(
+        $('#review-btn'),
+        dialog,
+        $("input[name='reviewResult']"),
+        $('#tutor_comments'),
+        url,
+        ${nav_active}
+      );
+    `;
+  }
 %>
 
 <% block('script', script) -%>

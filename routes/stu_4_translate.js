@@ -13,12 +13,8 @@ router.get("/", (req, res)=>{
 
 	publicFun.hasPower(req,res,g_vars.ID_STUDENT);
 
-	var user = req.session.user;
-
 	var data = {
 			title 			: "translate",
-			username 		: user.stu_name,
-			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_TRANSLATE,
 
 			breadcrumbs : "流程管理 >> 文献综述或外文翻译",
@@ -27,33 +23,20 @@ router.get("/", (req, res)=>{
 				"2、 外文翻译确定上传后需等待指导教师的审核，只有审核通过后，才算完成外文翻译。"
 			],
 
-			detail_path : "/translate/detail",
-			pro_info 		: {
-				pro_name	: user.pro_name,
-				pro_type	: user.pro_type+"、"+g_vars.PRO_TYPE[user.pro_type],
-				pro_nature: user.pro_nature+"、"+g_vars.PRO_NATURE[user.pro_nature],
-				tutor_name: user.tutor_name,
-				status    : null
-			}
+			detail_path : "/translate/detail"
 		};
 
-		stuDAO.showTranslate(user.pro_id,(result)=>{
-
-			if(result.length != 0){
-				data.pro_info.status = result[0].status;
-			}
-			res.render("stu_process",data);
-		});
-
+	publicFun.renderProcess(req,res,data);
+		
 });
 
 /* 外文翻译详情 */
 router.get("/detail",function(req, res){
 
-	publicFun.hasPower(req,res,g_vars.ID_STUDENT);
+	publicFun.toLogin(req,res);
 
 	var user = req.session.user;
-	var pro_id = req.query.pro_id?req.query.pro_id:user.pro_id; 
+	var pro_id = req.query.id?req.query.id:user.pro_id; 
 
 	var data = {
 			title 			: "this is translate detail",
@@ -87,7 +70,7 @@ router.get("/detail",function(req, res){
 		else{
 			data.pro_info = result[0];
 			// 如果审核通过，所有文本框置为readonly
-			if(data.pro_info.status == 1){
+			if(data.pro_info.status == 1 || user.identity != g_vars.ID_STUDENT){
 				data.readonly = " readonly='readonly' ";
 			}
 			data.pro_info.file_name = publicFun.getFileName(data.pro_info.file_path);

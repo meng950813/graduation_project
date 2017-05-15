@@ -1,0 +1,83 @@
+<% layout('template') %>
+
+<%if(pro_info == null) { %>
+  <div class="publish-container">
+    <div class="line">
+      <label class="btn btn-default" for="pro_name">课题名称</label>
+      <input type="text" id="pro_name" name="pro_name" >
+    </div>
+    <div class="line">
+      <label class="btn btn-default" for="pro_type">课题类型</label>
+      <select name="pro_type" id="pro_type">
+        <option value="0">--请选择--</option>
+        <% for(var key in pro_type) {%>
+          <option value="<%= key%>"><%= key%>、<%= pro_type[key]%></option>
+        <% } %>
+      </select>
+      
+      <label class="btn btn-default" for="pro_nature">课题性质</label>
+      <select name="pro_nature" id="pro_nature">
+        <option value="0">--请选择--</option>
+        <% for(var key in pro_nature) { %>
+          <option value="<%= key%>"><%= key%>、<%= pro_nature[key]%></option>
+        <% } %>
+      </select>
+    </div>
+    <div class="line">
+      <label class="btn btn-default" for="major">针对专业</label>
+      <select name="major" id="major">
+        <option value='0'>--请选择--</option>
+      </select>
+    </div>
+    <div class="line">
+      <button id="publish-btn" class="btn btn-block btn-success" data-id="0">确认发布</button>
+    </div>
+  </div>
+<% } else {%>
+   <div class="publish-container">
+    <div class="line">
+      <label class="btn btn-default" for="pro_name">课题名称</label>
+      <input type="text" id="pro_name" name="pro_name" value='<%= pro_info.pro_name%>' >
+    </div>
+    <div class="line">
+      <label class="btn btn-default" for="pro_type">课题类型</label>
+      <select name="pro_type" id="pro_type">
+        <option value="<%= pro_info.pro_type%>"><%= pro_info.pro_type%>、<%= pro_type[pro_info.pro_type]%></option>
+        <% for(var key in pro_type) {%>
+          <option value="<%= key%>"><%= key%>、<%= pro_type[key]%></option>
+        <% } %>
+      </select>
+      
+      <label class="btn btn-default" for="pro_nature">课题性质</label>
+      <select name="pro_nature" id="pro_nature">
+        <option value="<%= pro_info.nature%>"><%= pro_info.pro_nature%>、<%= pro_nature[pro_info.pro_nature]%></option>
+        <% for(var key in pro_nature) { %>
+          <option value="<%= key%>"><%= key%>、<%= pro_nature[key]%></option>
+        <% } %>
+      </select>
+    </div>
+    <div class="line">
+      <label class="btn btn-default" for="major">针对专业</label>
+      <select name="major" id="major">
+        <option value='<%= pro_info.major_id%>'><%= pro_info.major_name%></option>
+      </select>
+    </div>
+    <div class="line">
+      <button id="publish-btn" class="btn btn-block btn-success" data-id="<%pro_info.pro_id%>">确认修改</button>
+    </div>
+  </div>
+<% } %>
+
+<% var publish_update = pro_info == null?"发布":"修改";%>
+<div id="animateDialog" class="animateDialog btn-default">
+  <div class="dialogTips">
+    <h3 class="success color-success"><%= publish_update%>成功</h3>
+    <h3 class="fail color-danger"><%= publish_update%>失败,请稍后再试</h3>
+  </div>
+  <div class="dialogOptions">
+    <button id="republish" class="btn btn-info success">继续发布</button>
+    <button id="close-btn" class="btn btn-danger btn-block fail">知道了</button>
+    <button id="showResult" class="btn btn-success submit-btn success">查看效果</button>
+  </div>
+</div>
+<% script("/javascripts/publishProject.js") -%>

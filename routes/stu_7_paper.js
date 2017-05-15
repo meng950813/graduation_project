@@ -13,12 +13,8 @@ router.get("/", (req, res)=>{
 
 	publicFun.hasPower(req,res,g_vars.ID_STUDENT);
 
-	var user = req.session.user;
-
 	var data = {
 			title 			: "paper",
-			username 		: user.stu_name,
-			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_PAPER,
 
 			breadcrumbs : "流程管理 >> 论文正稿",
@@ -31,33 +27,20 @@ router.get("/", (req, res)=>{
 				"5、 如果论文定稿通过教师审核通过之后，还需要修改，则可以在“特殊情况处理—论文定稿修改”菜单功能页面进行修改，修改后需要教师在特殊情况处理审核"
 			],
 
-			detail_path : "/paper/detail",
-			pro_info 		: {
-				pro_name	: user.pro_name,
-				pro_type	: user.pro_type+"、"+g_vars.PRO_TYPE[user.pro_type],
-				pro_nature: user.pro_nature+"、"+g_vars.PRO_NATURE[user.pro_nature],
-				tutor_name: user.tutor_name,
-				status    : null
-			}
+			detail_path : "/paper/detail"
 		};
 
-		stuDAO.showPaper(user.pro_id,(result)=>{
-
-			if(result.length != 0){
-				data.pro_info.status = result[0].status;
-			}
-			res.render("stu_process",data);
-		});
-
+	publicFun.renderProcess(req,res,data);
+		
 });
 
-/* 中期检查详情 */
+/* 详情 */
 router.get("/detail",function(req, res){
 
-	publicFun.hasPower(req,res,g_vars.ID_STUDENT);
+	publicFun.toLogin(req,res);
 
 	var user = req.session.user;
-	var pro_id = req.query.pro_id?req.query.pro_id:user.pro_id; 
+	var pro_id = req.query.id?req.query.id:user.pro_id; 
 
 	var data = {
 			title 			: "this is paper detail",
@@ -96,7 +79,7 @@ router.get("/detail",function(req, res){
 		else{
 			data.pro_info = result[0];
 			// 如果审核通过，所有文本框置为readonly
-			if(data.pro_info.status == 1){
+			if(data.pro_info.status == 1 || user.identity != g_vars.ID_STUDENT){
 				data.readonly = " readonly='readonly' ";
 			}
 			data.pro_info.file_name = publicFun.getFileName(data.pro_info.file_path);

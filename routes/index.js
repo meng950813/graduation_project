@@ -106,7 +106,7 @@ router.post("/login",function(req, res, next){
 
 router.get("/logout",function(req, res , next){
 	delete req.session.user;
-  return res.render('login');
+  res.render('login');
 });
 
 router.post("/upload",upload.single('upload_file'),(req,res)=>{

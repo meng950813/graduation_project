@@ -38,18 +38,20 @@
       </td>
       <td>
         <% if(pro_info.status == null) { %>
-          <h3 class="color-black">未上传</h3>
-          <a class="btn btn-block btn-info" href="<%= detail_path %>">现在上传</a>
-        <% } else if(pro_info.status == 0){ %>
-          <h3 class="color-black">等待审核</h3>
-          <a class="btn btn-block btn-warning" href="<%= detail_path %>">修改</a>
-        <% } else if(pro_info.status == 1){ %>
           <h3 class="color-success">审核通过</h3>
           <a class="btn btn-block btn-success" href="<%= detail_path %>">查看详情</a>
-        <% } else{ %>
+        <% } else if(pro_info.status == 0){ %>
+          <h3 class="color-black">未上传</h3>
+          <a class="btn btn-block btn-info" href="<%= detail_path %>">现在上传</a>
+        <% } else if(pro_info.status == 1){ %>
+          <h3 class="color-black">等待审核</h3>
+          <a class="btn btn-block btn-warning" href="<%= detail_path %>">修改</a>
+        <% } else if(pro_info.status == 2){ %>
           <h3 class="color-danger">审核不通过</h3>
           <a class="btn btn-block btn-danger" href="<%= detail_path %>">重新上传</a>
-        <% }%>
+        <% } else { %>
+           <h3 class="color-danger">暂不能上传内容</h3>
+        <% } %>
       </td>
     </tr>
   </tbody>

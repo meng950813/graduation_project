@@ -13,7 +13,11 @@
   	<%include ./included/header.ejs%>
     <article id="article">
     	<div class="container">
-    		<%include ./included/stu_nav.ejs%>
+        <% if(identity == 0) { %>
+    		  <%include ./included/stu_nav.ejs%>
+        <% } else { %>
+          <%include ./included/tutor_nav%>
+        <% } %>
 				<div id="show-area">
           <!-- 面包屑导航 -->
           <% include ./included/breadcrumbs.ejs%>

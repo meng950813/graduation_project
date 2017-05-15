@@ -5,6 +5,9 @@ const crypto = require("crypto");
 const secret = "meng";
 var g_vars	 = require("../helper/variable");
 
+var stuDAO = require("../DAO/stuDAO");
+
+
 module.exports = {
 
 	/**
@@ -27,6 +30,67 @@ module.exports = {
 		return crypto.createHmac('sha256', secret)
                  .update(source)
                  .digest('hex');
+	},
+
+
+	/**
+	 * [渲染任务书 - 论文正稿之间的页面]
+	 *
+	 * @param {[type]} req  [description]
+	 * @param {[type]} res  [description]
+	 * @param {[type]} info [特定内容
+	 * title,nav_active,breadcrumbs,prompt_text,detail_path,]
+	 *
+	 */
+	renderProcess : (req,res,info)=>{
+		var user = req.session.user;
+		// 初始化通用信息
+		var data = {
+			title 			: "",
+			username 		: user.stu_name,
+			identity 		: user.identity,
+			nav_active 	: null,
+
+			breadcrumbs : null,
+			prompt_text	: [],
+
+			detail_path	: "",
+			
+			pro_info 		: {
+				pro_name	: user.pro_name,
+				pro_type	: user.pro_type+"、"+g_vars.PRO_TYPE[user.pro_type],
+				pro_nature: user.pro_nature+"、"+g_vars.PRO_NATURE[user.pro_nature],
+				tutor_name: user.tutor_name,
+				// status == null 表示当前进度已经完成，上传内容审核通过
+				status    : null
+			}
+		};
+
+		// 填充特定信息
+		data.title 			 = info.title;
+		data.nav_active  = info.nav_active;
+		data.breadcrumbs = info.breadcrumbs;
+		data.prompt_text = info.prompt_text;
+		data.detail_path = info.detail_path;
+
+		// 查看已经完成的内容
+		if(user.pro_process > info.nav_active){
+			res.render("stu_process",data);
+		}
+		// 查看当前进度的内容
+		else if(user.pro_process == info.nav_active){
+			stuDAO.getStatus(user.pro_id,(result)=>{
+				if(result.length != 0){
+					data.pro_info.status = result[0].status;
+				}
+				res.render("stu_process",data);
+			});
+		}
+		// 查看下一进度的状态：设置 status = 5:暂不能上传
+		else {
+			data.pro_info.status = 5;
+			res.render("stu_process",data);
+		}
 	},
 
 
@@ -83,6 +147,26 @@ module.exports = {
 			result[i].pro_type = result[i].pro_type +"、" +g_vars.PRO_TYPE[result[i].pro_type];
 			result[i].pro_nature = result[i].pro_nature +"、" +g_vars.PRO_NATURE[result[i].pro_nature];
 		}
+	},
+
+
+	/**
+	 * 根据传入的当前进度，获取之前已经完成的进度列表
+	 *
+	 * @param {[type]} pro_process [毕设进度，2表示 任务书，从导师角度，这是开始]
+	 *
+	 * @return {[type]} [进度列表数组]
+	 */
+	getProcessList : (pro_process)=>{
+		var arr = [],sub = 2;
+		for(var key in g_vars.PROCESS){
+			arr[key] = g_vars.PROCESS[key];
+			arr['lastKey'] = key;
+			sub++;
+			if(sub > pro_process)
+				break;
+		}
+		return arr;
 	},
 
 

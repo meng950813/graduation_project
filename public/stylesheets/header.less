@@ -1,0 +1,42 @@
+/* this is header */
+#header{
+	background: @bg-color;
+	border-bottom: 1px solid #ddd;
+	.container{
+		font-size: 1.4rem;
+		height: 2.5rem;
+		line-height: 2.5rem;
+	}
+}
+
+#system-tools{
+	.clearfix();
+	float: right;
+	a{
+		display: inline-block;
+		padding: 0 1rem;
+		// .color-();
+	}
+}
+
+#header-logo{
+	.container{
+		padding: 1rem 1.5rem;
+		text-align: center;
+		font-size: 3rem;
+		color: @color-warning;
+
+	}
+}
+
+#logo{
+	border: none;
+	max-width: 120px;
+	float: left;
+	&:after{
+		clear: both;
+		content: "";
+		display: inline-block;
+		vertical-align: middle;
+	}
+}

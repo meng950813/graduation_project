@@ -90,6 +90,27 @@ module.exports = {
 
 
 	/**
+	 * 获取课题状态 ：
+	 * 	 0::未上传;  1：未审核;2：审核不通过
+	 * 	 如果当前进程数字大于查看进程，表示该进程已通过
+	 * 	 例：pro_process = 4:外文翻译，表示任务书和开题报告都通过
+	 *
+	 * @param {[type]}   pro_id   [课题id]
+	 *
+	 */
+	getStatus : (pro_id,callback)=>{
+		var sql = "select status from student_info where project_id=?";
+
+		query(sql,[pro_id],function(error,result){
+			if(error){
+				console.log("getStatus : "+error.message);
+				return g_vars.ERROR;
+			}
+			callback(result);
+		})
+	},
+
+	/**
 	 * 上传任务书 并在提交信息表中添加新数据
 	 *
 	 * @param {[obj]} info [学生信息,课题信息,输入内容,文件名及路径]
@@ -119,25 +140,6 @@ module.exports = {
 		query(sql,params,function(error,result){
 			if(error){
 				console.log("uploadTask : "+error.message);
-				return g_vars.ERROR;
-			}
-			callback(result);
-		})
-	},
-
-	/**
-	 * 查看任务书
-	 *
-	 * @param  pro_id   [毕设课题id,from session or localStorage]
-	 *
-	 * @return {[type]}   [返回任务书状态及毕设课题基本信息]
-	 */
-	showTask : function(pro_id,callback){
-		var sql = "select status from task_info where project_id=?";
-
-		query(sql,[pro_id],function(error,result){
-			if(error){
-				console.log("showTask : "+error.message);
 				return g_vars.ERROR;
 			}
 			callback(result);
@@ -180,24 +182,6 @@ module.exports = {
 			}
 			callback(result);
 		});
-	},
-
-	/**
-	 * 查看开题报告，返回开题报告审核状态
-	 *
-	 * @param  pro_id  [课题id]
-	 *
-	 * @return  [返回开题报告状态]
-	 */
-	showOpenTopic : function(pro_id,callback){
-		var sql = "select status from open_topic_info where project_id=?";
-		query(sql,[pro_id],function(error,result){
-			if(error){
-				console.log("showOpenTopic : "+error.message);
-				return g_vars.ERROR;
-			}
-			callback(result);
-		})
 	},
 
 
@@ -244,24 +228,6 @@ module.exports = {
 		});
 	},
 
-	/**
-	 * 查看外文翻译审核状态
-	 *
-	 * @param {[type]}   pro_id   [课题id]
-	 *
-	 * @return {[type]}   [返回审核状态]
-	 */
-	showTranslate : function(pro_id,callback){
-		var sql = "select status from translate_info where project_id=?";
-		query(sql,[pro_id],function(error,result){
-			if(error){
-				console.log("showTranslate : "+ error.message);
-				return g_vars.ERROR;
-			}
-			callback(result);
-		});
-	},
-	
 	
 
 
@@ -303,23 +269,6 @@ module.exports = {
 		});
 	},
 
-	/**
-	 * 查看中期检查审核状态
-	 *
-	 * @param {[type]}   pro_id   [课题id]
-	 * 
-	 * @return {[type]}   [返回审核状态]
-	 */
-	showMiddle : function(pro_id,callback){
-		var sql = "select status from middle_info where project_id=?";
-		query(sql,[pro_id],function(error,result){
-			if(error){
-				console.log("showMiddle : "+error.message);
-				return g_vars.ERROR;
-			}
-			callback(result);
-		});
-	},
 
 
 
@@ -366,23 +315,6 @@ module.exports = {
 		});
 	},
 
-	/**
-	 * 查看论文草稿上传状态
-	 *
-	 * @param  pro_id   [课题id]
-	 *
-	 * @return   [返回审核状态]
-	 */
-	showDraft : function(pro_id,callback){
-		var sql = "select status from draft_info where project_id=?";
-		query(sql,[pro_id],function(error,result){
-			if(error){
-				console.log("showDraft : "+error.message);
-				return g_vars.ERROR;
-			}
-			callback(result);
-		});
-	},
 
 
 
@@ -418,24 +350,6 @@ module.exports = {
 		query(sql,params,function(error,result){
 			if(error){
 				console.log("uploadPaper : "+error.message);
-				return g_vars.ERROR;
-			}
-			callback(result);
-		});
-	},
-
-	/**
-	 * 查看毕业论文上传状态
-	 *
-	 * @param  pro_id  [课题id]
-	 *
-	 * @return   [返回审核状态]
-	 */
-	showPaper : function(pro_id,callback){
-		var sql = "select status from paper_info where project_id=?";
-		query(sql,[pro_id],function(error,result){
-			if(error){
-				console.log("showPaper : "+error.message);
 				return g_vars.ERROR;
 			}
 			callback(result);

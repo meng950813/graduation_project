@@ -1,0 +1,128 @@
+
+// @font-face {
+//   font-family: 'Glyphicons Halflings';
+//   src: url('@{icon-font-path}@{icon-font-name}.eot');
+//   src: url('@{icon-font-path}@{icon-font-name}.eot?#iefix') format('embedded-opentype'),
+//        url('@{icon-font-path}@{icon-font-name}.woff2') format('woff2'),
+//        url('@{icon-font-path}@{icon-font-name}.woff') format('woff'),
+//        url('@{icon-font-path}@{icon-font-name}.ttf') format('truetype'),
+//        url('@{icon-font-path}@{icon-font-name}.svg') format('svg');
+// }
+
+.progress-button {
+	position: relative;
+	display: inline-block;
+	padding: 0 38px;
+	outline: none;
+	border: none;
+	border-radius: 5px;
+	background: @color-warning;
+	color: #fff;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-size: 1em;
+	line-height: 2;
+
+
+	.content{
+		position: relative;
+		display: block;
+		
+		&:before,&:after{
+			position: absolute;
+			right: 20px;
+			// color: #0e7138;
+			font-family: "Glyphicons Halflings";
+			opacity: 0;
+			-webkit-transition: opacity 0.3s 0.3s;
+			transition: opacity 0.3s 0.3s;
+		}
+
+		&:before{
+			content: "\e013";/* Checkmark for success */
+		}
+		&:after{
+			content: "\e014";/* Cross for error */
+		}
+	}
+
+	.progress {
+		background: #148544;
+	}
+
+	.progress-inner {
+		position: absolute;
+		left: 0;
+		background: #0e7138;
+	}
+
+}
+
+.progress-button[disabled],
+.progress-button[disabled].state-loading {
+	cursor: default;
+}
+
+.progress-button.state-success .content::before{
+	opacity: 1;
+	color: @color-success;
+	content: "\e013";/* Checkmark for success */
+}
+.progress-button.state-error .content::after {
+	opacity: 1;
+	color: @color-danger;
+	content: "\e014";/* Cross for error */
+}
+
+
+
+.progress-button[data-horizontal] .progress-inner {
+	top: 0;
+	width: 0;
+	height: 100%;
+	-webkit-transition: width 0.3s, opacity 0.3s;
+	transition: width 0.3s, opacity 0.3s;
+}
+
+
+
+
+/* Shrink horizontal */
+/* ====================== */
+
+.progress-button.shrink { /* common for horizontal and vertical */
+	overflow: hidden;
+	-webkit-transition: -webkit-transform 0.2s;
+	transition: transform 0.2s;
+}
+
+.progress-button.shrink[data-horizontal] .content {
+	-webkit-transition: opacity 0.3s, -webkit-transform 0.3s;
+	transition: opacity 0.3s, transform 0.3s;
+}
+
+.progress-button.shrink[data-horizontal] .content::before,
+.progress-button.shrink[data-horizontal] .content::after {
+	top: 100%;
+	right: auto;
+	left: 50%;
+	-webkit-transition: opacity 0.3s;
+	transition: opacity 0.3s;
+	-webkit-transform: translateX(-50%);
+	transform: translateX(-50%);
+}
+
+.progress-button.shrink[data-horizontal].state-loading {
+	-webkit-transform: scaleY(0.3);
+	transform: scaleY(0.3);
+}
+
+.progress-button.shrink[data-horizontal].state-loading .content {
+	opacity: 0;
+}
+
+.progress-button.shrink[data-horizontal].state-success .content,
+.progress-button.shrink[data-horizontal].state-error .content {
+	-webkit-transform: translateY(-100%);
+	transform: translateY(-100%);
+}

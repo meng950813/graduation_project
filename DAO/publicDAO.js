@@ -226,24 +226,24 @@ module.exports = {
 				break;
 			// 获取开题报告详情
 			case g_vars.PROCESS_OPEN:
-				sql = "select *,topic_id as id from open_topic_info where project_id=?";
+				sql = "select *,project_id as id from open_topic_info where project_id=?";
 				break;
 			// 获取外文翻译详情
 			case g_vars.PROCESS_TRANSLATE:
-				sql = `select *,trans_id as id,original_path as file_path,translation_path as annex_path 
+				sql = `select *,project_id as id,original_path as file_path,translation_path as annex_path 
 								from translate_info where project_id=?`;
 				break;
 			// 获取中期答辩详情
 			case g_vars.PROCESS_MIDDLE:
-				sql = "select *,mid_id as id from middle_info where project_id=?";
+				sql = "select *,project_id as id from middle_info where project_id=?";
 				break;
 			// 获取论文草稿详情
 			case g_vars.PROCESS_DRAFT:
-				sql = "select *,draft_id as id from draft_info where project_id=?";
+				sql = "select *,project_id as id from draft_info where project_id=?";
 				break;
 			// 获取论文详情
 			case g_vars.PROCESS_PAPER:
-				sql = "select *,paper_id as id from paper_info where project_id=?";
+				sql = "select *,project_id as id from paper_info where project_id=?";
 				break;
 			// 参数不正确,结束
 			default:
@@ -330,6 +330,23 @@ module.exports = {
 					callback(group_info,tutor_info,stu_info);
 				});
 			})
+		});
+	},
+
+
+	/**
+	 * 通过传入的导师id,获取所属学院的所有专业
+	 */
+	getMajor : (tutor_id,callback)=>{
+		var sql = `select major_name as name,major_info.major_id as id
+								from tutor_info,major_info
+								where tutor_id=? and college_id=tutor_college and major_info.exist=1`;
+		query(sql,[tutor_id],(error,result)=>{
+			if(error){
+				console.log("get major error : "+error.message);
+				return;
+			}
+			callback(result);
 		});
 	}
 }

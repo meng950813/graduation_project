@@ -1,0 +1,53 @@
+
+/* 提示框 */
+.animateDialog{
+	width: 400px;
+	min-height: 240px;
+	// 						padding  	font-size  line-height  border-radius
+	.button-size(10px; 20px; 18px; @line-height-base; 20px);
+	position: fixed;
+	top: -250px;
+	left: 50%;
+	margin: -120px 0 0 -150px;
+	opacity: 0;
+	background: @bg-color;
+	text-align: center;
+	transition: all 0.3s;
+}
+.dialogTips{
+	height: 160px;
+	padding-top: 30px;
+	line-height: 2;
+	h3{
+		display: none;
+	}
+}
+.dialogOptions{
+	.btn{
+		margin: 0 10%;
+	}
+	.btn-block{
+		margin: 0 auto!important;
+	}
+}
+.showAnimateDialog{
+	opacity: 1!important;
+	top: 50%!important;
+}
+.showFail{
+	.success,.submit-btn{
+		display: none!important;
+	}
+	.fail{
+		display: block!important;
+	}
+
+}
+.showSuccess{
+	.success{
+		display: block!important;
+	}
+	.fail,.submit-btn{
+		display: none!important;
+	}
+}

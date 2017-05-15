@@ -53,6 +53,7 @@ app.use('/paper', require('./routes/stu_7_paper'));
 app.use('/comments', require('./routes/commets_to_tutor'));
 // app.use('/reply', require('./routes/reply_group'));
 // app.use('/upload', require('./routes/upload'));
+app.use('/tutor', require('./routes/tutor'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

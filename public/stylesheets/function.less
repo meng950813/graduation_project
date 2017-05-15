@@ -1,0 +1,65 @@
+/* this is css function */
+
+.clearfix() {
+  &:before,
+  &:after {
+    content: "";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.show{
+	display: block !important;
+}
+.hide{
+	display: none !important;
+}
+
+.nav-active{
+	span,a{color: @color-active!important;}
+}
+
+.color-primary{
+	color: @color-primary!important;
+}
+.color-success{
+	color: @color-success!important;
+}
+.color-info{
+	color: @color-info!important;
+}
+.color-warning{
+	color: @color-warning!important;
+}
+.color-danger{
+	color: @color-danger!important;
+}
+.color-white{
+	color: @color-white!important;
+}
+
+.border-success{
+	border-color: @color-success!important;
+}
+.border-danger{
+	border-color: @color-danger!important;
+}
+.border-2px-warning{
+	border: 2px solid @color-warning;
+	border-radius: 5px;
+}
+
+.padding-b-15{
+	padding-bottom: 15px;
+}
+
+.line-height-2{
+	line-height: 2;
+}
+
+.text-right{text-align: right;}
+.text-left{text-align: left;}
+.text-center{text-align: center;}

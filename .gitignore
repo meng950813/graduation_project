@@ -2,4 +2,6 @@
 /sql/
 /upload_files/
 /node_modules/
+/public/stylesheets/*.css
+/api/
 test.js

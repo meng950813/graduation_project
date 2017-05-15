@@ -34,6 +34,15 @@ var variable = function(){
 	this.PROCESS_REPLY 			= 8; // 答辩
 	this.PROCESS_OVER 			= 9; // 结束
 
+	this.PROCESS = [];
+	this.PROCESS["task"] 			= "任务书";
+	this.PROCESS["open"] 			= "开题报告";
+	this.PROCESS["translate"] = "外文翻译";
+	this.PROCESS["middle"] 		= "中期检查";
+	this.PROCESS["draft"] 		= "论文草稿";
+	this.PROCESS["paper"] 		= "论文正稿";
+	this.PROCESS["reply"] 		= "答辩";
+	this.PROCESS["over"] 			= "完成";
 
 	// 毕设类型
 	this.PRO_TYPE_A = "A";
@@ -67,6 +76,7 @@ var variable = function(){
 
 
 	this.FILE_DIR = "upload_files";
+
 	/* 
 	session:
 			stu_id,

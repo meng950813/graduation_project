@@ -9,7 +9,7 @@
 <%include ./included/detail_dialog.ejs%>
 
 <% var script;
-  if(identity == 0){
+  if(identity == && pro_info.status != 1){
     script = `
       var upload = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner')),
       
@@ -29,8 +29,21 @@
         uploadAnnex
       );
     `;
-  }else{
-    script = ` TODO `;
+  }else if(identity == 1 && pro_info.status != 1){
+    script = `
+      var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn")),
+      
+      url = '/tutor/review';
+      
+      var review = new uploadReview(
+        $('#review-btn'),
+        dialog,
+        $("input[name='reviewResult']"),
+        $('#tutor_comments'),
+        url,
+        ${nav_active}
+      );
+    `;
   }
 %>
 

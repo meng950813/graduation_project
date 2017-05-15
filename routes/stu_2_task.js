@@ -12,12 +12,8 @@ var publicFun = require("./publicFun");
 router.get("/", (req, res)=>{
 	publicFun.hasPower(req,res,g_vars.ID_STUDENT);
 
-	var user = req.session.user;
-
 	var data = {
 			title 			: "this is task",
-			username 		: user.stu_name,
-			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_TASK,
 
 			breadcrumbs : "流程管理 >> 任务书",
@@ -25,32 +21,17 @@ router.get("/", (req, res)=>{
 				"1、 任务书由指导教师在学生开题前填写。任务书是纲领性材料，学生需根据指导教师的任务书来完成自己的毕业设计（论文）。"
 			],
 
-			detail_path	: "/task/detail",
-			
-			pro_info 		: {
-				pro_name	: user.pro_name,
-				pro_type	: user.pro_type+"、"+g_vars.PRO_TYPE[user.pro_type],
-				pro_nature: user.pro_nature+"、"+g_vars.PRO_NATURE[user.pro_nature],
-				tutor_name: user.tutor_name,
-				status    : null
-			}
+			detail_path	: "/task/detail"
 		};
-
-		stuDAO.showChoosePro(user.pro_id,(result)=>{
-			if(result.length != 0){
-				data.pro_info.status = result[0].status;
-			}
-			res.render("stu_process",data);
-		});
-
+	publicFun.renderProcess(req,res,data);
 });
 
 /* 任务书详情 */
 router.get("/detail",function(req, res){
-	publicFun.hasPower(req,res,g_vars.ID_STUDENT);
+	publicFun.toLogin(req,res);
 
 	var user = req.session.user;
-	var pro_id = req.query.pro_id?req.query.pro_id:user.pro_id; 
+	var pro_id = req.query.id?req.query.id:user.pro_id; 
 
 	var data = {
 			title 			: "this is task detail",
@@ -84,8 +65,8 @@ router.get("/detail",function(req, res){
 		}
 		else{
 			data.pro_info = result[0];
-			// 如果审核通过，所有文本框置为readonly
-			if(data.pro_info.status == 1){
+			// 如果审核通过 或 用户不是学生，所有文本框置为readonly
+			if(data.pro_info.status == 1 || user.identity != g_vars.ID_STUDENT){
 				data.readonly = " readonly='readonly' ";
 			}
 			// data.pro_info.id = data.pro_info.task_id; 
