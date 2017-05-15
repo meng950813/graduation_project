@@ -27,6 +27,9 @@
       <label class="btn btn-default" for="major">针对专业</label>
       <select name="major" id="major">
         <option value='0'>--请选择--</option>
+         <% for(var i in major_info) { %>
+          <option value="<%= major_info[i].id%>"><%= major_info[i].name%></option>
+        <% } %>
       </select>
     </div>
     <div class="line">
@@ -60,6 +63,9 @@
       <label class="btn btn-default" for="major">针对专业</label>
       <select name="major" id="major">
         <option value='<%= pro_info.major_id%>'><%= pro_info.major_name%></option>
+         <% for(var i in major_info) { %>
+          <option value="<%= major_info[i].id%>"><%= major_info[i].name%></option>
+        <% } %>
       </select>
     </div>
     <div class="line">

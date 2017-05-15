@@ -68,34 +68,32 @@ router.get("/publish",(req,res)=>{
 
 		pro_type  : g_vars.PRO_TYPE,
 
-		pro_nature: g_vars.PRO_NATURE
+		pro_nature: g_vars.PRO_NATURE,
+
+		major_info: null
 	};
- 
-console.dir(data.pro_type);
 
-	// 传入 pro_id 表示修改课题，先获取该课题信息
-	if(pro_id != undefined){
-		tutorDAO.getProject(pro_id,(result)=>{
-			data.pro_info = result[0];
-			res.render("tutor_publish_project",data);
-		});
-	}else{
-		res.render("tutor_publish_project",data);
-	}
-});
-
-/* 根据导师id获取导师所在学院的所有专业 */
-router.get("/getMajor",(req,res)=>{
-	var tutor_id = req.session.user.tutor_id;
-
-	publicDAO.getMajor(tutor_id,(result)=>{
-		if(result.length>0){
-			res.json({ok:true,result:result});
-		}else{
-			res.json({ok:false});
+	publicDAO.getMajor(user.tutor_id,(major_info)=>{
+		if(major_info.length <= 0){
+			console.log("can not get major info");
+			return;
 		}
-	});
+		data.major_info = major_info;
+		
+		// 传入 pro_id 表示修改课题，先获取该课题信息
+		if(pro_id != undefined){
+			tutorDAO.getProject(pro_id,(result)=>{
+				data.pro_info = result[0];
+				res.render("tutor_publish_project",data);
+			});
+		}else{
+			res.render("tutor_publish_project",data);
+		}
+
+	})
+
 });
+
 
 /* 导师提交评价 */
 router.post('/review',(req,res)=>{
