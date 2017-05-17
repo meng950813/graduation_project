@@ -40,9 +40,13 @@
         </td>
         
         <% if(pro_info[i].stu_num == null){ %>
-          <td colspan="3">
+          <td colspan="2">
             <h3 class='color-warning'>尚未被选择</h3>
           </td>
+          <td>
+            <a class="btn btn-block btn-info" href="/tutor/publish?id=<%= pro_info[i].pro_id%>">修改课题信息</a>
+          </td>
+
         <% } else{ %>
           <td>
             <p class="line-height-2"><%= pro_info[i].stu_name%></p>
@@ -69,6 +73,7 @@
       <% if(pro_info[i].stu_num != null) { %>
         <tr class="all-process">
           <td colspan="6">
+
             <%
               for(var key in progress) { 
                 if(key != progress.lastKey && key != "lastKey"){
@@ -77,7 +82,11 @@
             <% 
                 } 
               }
+              if(pro_info[i].pro_process <= 2 ){
             %>
+              <!-- 结束任务书阶段之前,导师可以修改课题 -->
+              <a class="btn btn-lg btn-info" href="/tutor/publish?id=<%= pro_info[i].pro_id%>">修改课题信息</a>
+            <% } %>
           </td>
         </tr>
     <% 

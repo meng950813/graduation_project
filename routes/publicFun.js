@@ -7,20 +7,24 @@ var g_vars	 = require("../helper/variable");
 
 var stuDAO = require("../DAO/stuDAO");
 
+function fullZero(number){
+	return number>10?number:"0"+number;
+}
 
 module.exports = {
 
 	/**
-	 * 将从数据库中获取的审核结果代码转换为对应的中文
-	 *
-	 * @param {[type]} status []
-	 *
+	 * 将从数据库中取出的时间戳换为时间字符串
 	 */
-	reviewResult : (status)=>{
-		return status == 0 ? "未审核"
-											 : status == 1 ? "审核通过"
-											 						   : status == 2 ? "审核不通过" :"未提交";
+	formatDate :(date)=>{
+		date = new Date(date);
+		return date.getFullYear()+"-"
+					+fullZero(date.getMonth()+1)+"-"
+					+fullZero(date.getDate())+"  "
+					+fullZero(date.getHours())+":"
+					+fullZero(date.getMinutes());
 	},
+
 
 	/**
 	 * 加密模块
@@ -36,8 +40,6 @@ module.exports = {
 	/**
 	 * [渲染任务书 - 论文正稿之间的页面]
 	 *
-	 * @param {[type]} req  [description]
-	 * @param {[type]} res  [description]
 	 * @param {[type]} info [特定内容
 	 * title,nav_active,breadcrumbs,prompt_text,detail_path,]
 	 *

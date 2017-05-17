@@ -46,7 +46,7 @@ router.get("/",(req,res)=>{
 	});
 });
 
-/* 发布课题 */
+/* 渲染发布课题的页面 */
 router.get("/publish",(req,res)=>{
 	publicFun.toLogin(req,res);
 	var user = req.session.user;
@@ -62,7 +62,10 @@ router.get("/publish",(req,res)=>{
 
 		breadcrumbs:"流程管理 >> 发布课题",
 
-
+		prompt_text : [
+			"1、 导师发布课题所针对的专业限定在导师所在学院中;",
+			"2、 在课题的任务书阶段结束之前,导师可以修改课题信息;"
+		],
 
 		pro_info 	: null,
 
@@ -91,9 +94,40 @@ router.get("/publish",(req,res)=>{
 		}
 
 	})
-
 });
 
+/* 发布课题数据 */
+router.post("/publish_project",(req,res)=>{
+
+	publicFun.hasPower(req,res,g_vars.ID_TUTOR);
+
+	var data = req.body,
+			fun;
+	data.tutor_id = req.session.user.tutor_id;
+
+	// 修改数据
+	if(data.pro_id != undefined){
+		fun = tutorDAO.updateProject;
+	}
+	// 插入新数据
+	else{
+		fun = tutorDAO.publishPro;
+	}
+	tutorDAO.checkProjectName(data.pro_name,(exist)=>{
+		if(exist.length == 0 || exist[0].pro_id == data.pro_id){
+			fun(data,(result)=>{
+				if(result.affectedRows > 0){
+					res.json({ok:true});
+				}else{
+					res.json({ok:false});
+				}
+			});
+		}
+		else{
+			res.json({ok:false,nameErr:true});
+		}
+	})
+});
 
 /* 导师提交评价 */
 router.post('/review',(req,res)=>{

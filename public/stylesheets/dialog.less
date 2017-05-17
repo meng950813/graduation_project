@@ -35,19 +35,27 @@
 	top: 50%!important;
 }
 .showFail{
-	.success,.submit-btn{
+	.success,.submit-btn,.name-error{
 		display: none!important;
 	}
 	.fail{
 		display: block!important;
 	}
-
+	
 }
 .showSuccess{
 	.success{
 		display: block!important;
 	}
-	.fail,.submit-btn{
+	.fail,.submit-btn,.name-error{
+		display: none!important;
+	}
+}
+.nameError{
+	.name-error{
+		display: block!important;
+	}
+	.fail,.submit-btn,.success{
 		display: none!important;
 	}
 }

@@ -17,9 +17,9 @@ module.exports = {
 	 * @return {[type]}   [返回写入状态]
 	 */
 	publishPro : function(info,callback){
-		var sql = `insert into project_info(pro_id,pro_name,pro_type,pro_nature,major,publisher,publish_time,status)
-							values(null,?,?,?,?,?,null,0)`;
-		var params = [info.pro_name,info.pro_type,info.nature,info.major,info.tutor_id];
+		var sql = `insert into project_info(pro_id,pro_name,pro_type,pro_nature,major_id,publisher,status)
+							values(null,?,?,?,?,?,0)`;
+		var params = [info.pro_name,info.pro_type,info.pro_nature,info.major_id,info.tutor_id];
 		query(sql,params,function(error,result){
 			if(error){
 				console.log("publishPro : "+error.message);
@@ -37,9 +37,11 @@ module.exports = {
 	 *
 	 */
 	getProject : (pro_id,callback)=>{
-		var sql = `select roject_info.*,major_name  
-							from project_info,major_info
-							where pro_id =? and project_info.major_id = major_info.major_id`;
+		var sql = `select project_info.*,major_name,pro_process as progress
+							from project_info
+							left join major_info on project_info.major_id = major_info.major_id
+							left join student_info on pro_id = student_info.project_id
+							where pro_id =? `;
 		query(sql,[pro_id],(error,result)=>{
 			if(error){
 				console.log("get project error : "+ error.message);
@@ -70,87 +72,22 @@ module.exports = {
 	},
 
 
-
-
 	/**
-	 * 获取  任务书,开题报告, 外文翻译, 中期答辩, 论文(草稿) 上传状态列表
-	 * 
-	 * 返回课题名，pro_id，类型，性质; 学生名，学号；任务书处理状态
-	 * 返回结果按 pro_id 升序排列
+	 * 检测输入的课题名是否存在
+	 *
+	 * @param {[type]}   pro_name [description]
+	 *
 	 */
-	// getList : function(tutor_id,pro_process,callback){
-	// 	var sql, nowYear = (new Date()).getFullYear();
-	// 	/* 联合查询,返回该导师 所有 已被选课题 的学生信息,课题信息及上传内容id,没有上传则对应信息为 NULL*/
-	// 	switch(pro_process){
-	// 		// 获取任务书列表
-	// 		case g_vars.PROCESS_TASK:
-	// 			sql = `select stu_num,stu_name,pro_id,pro_name,pro_type,pro_nature,task_id,task_info.status
-	// 							from  student_info
-	// 				           left join  project_info on project_info.pro_id=student_info.project_id
-	// 				           left join task_info on project_info.pro_id=task_info.project_id 
-	// 							where publisher=? and project_info.publish_time>? 
-	// 							order by project_info.pro_id`;
-	// 			break;
-	// 		// 获取开题报告列表
-	// 		case g_vars.PROCESS_OPEN:
-	// 			sql = `select stu_num,stu_name,pro_id,pro_name,pro_type,pro_nature,task_id,open_topic_info.status
-	// 							from  student_info
-	// 				           left join  project_info on project_info.pro_id=student_info.project_id
-	// 				           left join open_topic_info on project_info.pro_id=open_topic_info.project_id 
-	// 							where publisher=? and project_info.publish_time>? 
-	// 							order by project_info.pro_id`;
-	// 			break;
-	// 		// 获取外文翻译列表
-	// 		case g_vars.PROCESS_TRANSLATE:
-	// 			sql = `select stu_num,stu_name,pro_id,pro_name,pro_type,pro_nature,task_id,translate_info.status
-	// 							from  student_info
-	// 				           left join  project_info on project_info.pro_id=student_info.project_id
-	// 				           left join translate_info on project_info.pro_id=translate_info.project_id 
-	// 							where publisher=? and project_info.publish_time>? 
-	// 							order by project_info.pro_id`;
-	// 			break;
-	// 		// 获取中期答辩列表
-	// 		case g_vars.PROCESS_MIDDLE:
-	// 				sql = `select stu_num,stu_name,pro_id,pro_name,pro_type,pro_nature,task_id,middle_info.status
-	// 							from  student_info
-	// 				           left join  project_info on project_info.pro_id=student_info.project_id
-	// 				           left join middle_info on project_info.pro_id=middle_info.project_id 
-	// 							where publisher=? and project_info.publish_time>? 
-	// 							order by project_info.pro_id`;
-	// 			break;
-	// 		// 获取论文草稿列表
-	// 		case g_vars.PROCESS_DRAFT:
-	// 			sql = `select stu_num,stu_name,pro_id,pro_name,pro_type,pro_nature,task_id,paper_info.status
-	// 							from  student_info
-	// 				           left join  project_info on project_info.pro_id=student_info.project_id
-	// 				           left join draft_info on project_info.pro_id=paper_info.project_id 
-	// 							where publisher=? and project_info.publish_time>? 
-	// 							order by project_info.pro_id`;
-	// 			break;
-	// 		// 获取论文列表
-	// 		case g_vars.PROCESS_PAPER:
-	// 			sql = `select stu_num,stu_name,pro_id,pro_name,pro_type,pro_nature,task_id,paper_info.status
-	// 							from  student_info
-	// 				           left join  project_info on project_info.pro_id=student_info.project_id
-	// 				           left join paper_info on project_info.pro_id=paper_info.project_id 
-	// 							where publisher=? and project_info.publish_time>?  
-	// 							order by project_info.pro_id`;
-	// 			break;
-	// 		// 参数不正确,结束
-	// 		default:
-	// 			console.log("get detail -> process error");
-	// 			return;
-	// 	}
-	// 	/* 联合查询,返回该导师 所有 已被选课题 的学生信息，课题信息及任务书上传id,没有上传任务书则 task_id = NULL*/
-
-	// 	query(sql,[tutor_id,nowYear],function(error,result){
-	// 		if(error){
-	// 			console.log("getTaskList : "+error.message);
-	// 			return g_vars.ERROR;
-	// 		}
-	// 		callback(result);
-	// 	});
-	// },
+	checkProjectName : (pro_name,callback)=>{
+		var sql = `select pro_id from project_info where pro_name=?`;
+		query(sql,[pro_name],(error,result)=>{
+			if(error){
+				console.log("check project name error : "+error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
 
 
 	/**

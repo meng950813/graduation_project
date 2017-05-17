@@ -1,5 +1,15 @@
 <% layout('template') %>
 
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">相关提示</legend>
+  <ol>
+    <% for(var item in prompt_text) {%>
+      <li><%= prompt_text[item]%></li>
+    <% } %>
+  </ol>
+</fieldset>
+
 <%if(pro_info == null) { %>
   <div class="publish-container">
     <div class="line">
@@ -68,9 +78,11 @@
         <% } %>
       </select>
     </div>
-    <div class="line">
-      <button id="publish-btn" class="btn btn-block btn-success" data-id="<%pro_info.pro_id%>">确认修改</button>
-    </div>
+    <% if(pro_info.progress <=2 ) { %>
+      <div class="line">
+        <button id="publish-btn" class="btn btn-block btn-success" data-id="<%pro_info.pro_id%>">确认修改</button>
+      </div>
+    <% } %>
   </div>
 <% } %>
 
@@ -79,11 +91,12 @@
   <div class="dialogTips">
     <h3 class="success color-success"><%= publish_update%>成功</h3>
     <h3 class="fail color-danger"><%= publish_update%>失败,请稍后再试</h3>
+    <h3 class="color-danger name-error"><%= publish_update%>失败,已存在同名课题</h3>
   </div>
   <div class="dialogOptions">
-    <button id="republish" class="btn btn-info success">继续发布</button>
-    <button id="close-btn" class="btn btn-danger btn-block fail">知道了</button>
-    <button id="showResult" class="btn btn-success submit-btn success">查看效果</button>
+    <button id="republish" class="btn btn-info ">继续发布</button>
+    <button id="close-btn" class="btn btn-danger btn-block">知道了</button>
+    <a id="showResult" href="/tutor" class="btn btn-success">查看效果</a>
   </div>
 </div>
 <% script("/javascripts/publishProject.js") -%>

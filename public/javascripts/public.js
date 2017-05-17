@@ -316,10 +316,7 @@ stuUploadContent.prototype.submitClick = function(){
       	data.annex_path = this.annexUpload.getPath();
       }
     	
-    	console.dir(data);
-
       AJAX.post(this.url,data,function(result){
-      	console.log(result);
         if(result.ok == true){
           this.dialog.showResult(true);
           this.upload.cleanChange();
@@ -363,7 +360,8 @@ function getValue(target){
 /*
   利用IE与标准浏览器在处理数组的toString方法的差异做成：
   对于标准游览器，如果数组里面最后一个字符为逗号，JS 引擎会自动剔除它
-*/function isIE(){
+*/
+function isIE(){
   if(!-[1,])
     return true;
   return false;

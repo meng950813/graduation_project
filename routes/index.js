@@ -168,14 +168,14 @@ router.get("/reply",(req,res)=>{
 	publicDAO.showReplyGroup(user,(group_info,tutor_info,stu_info)=>{
 		var data = {
 			title 			: "答辩组信息",
-			username 		: user.stu_name,
+			username 		: user.stu_name==undefined?user.tutor_name:user.stu_name,
 			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_REPLY,
 
 			breadcrumbs : "流程管理 >> 答辩组信息",
 
 			prompt_text	: [
-				"学生查看所在答辩组的信息"
+				"1、查看所在答辩组的信息;"
 			]
 		};
 		if(group_info.length == 0 || tutor_info.length == 0|| stu_info.length == 0){
@@ -183,15 +183,21 @@ router.get("/reply",(req,res)=>{
 			data.show = false;
 		}else{
 			data.show = true;
+			
 			data.group_info = group_info[0];
+
+			data.date = publicFun.formatDate(data.group_info.start_time);
+
 			data.tutor_info = [];
 			for(var i in tutor_info){
 				data.tutor_info[tutor_info[i].tutor_id] = tutor_info[i].tutor_name;
 			}
+
 			data.stu_info 	= stu_info;
 		}		
 		res.render("reply_group",data);
 	});
 
 });
+
 module.exports = router;
