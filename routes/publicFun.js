@@ -49,7 +49,7 @@ module.exports = {
 		// 初始化通用信息
 		var data = {
 			title 			: "",
-			username 		: user.stu_name,
+			username 		: user.username,
 			identity 		: user.identity,
 			nav_active 	: null,
 

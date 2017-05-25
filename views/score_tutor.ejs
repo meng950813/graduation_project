@@ -1,0 +1,83 @@
+<% layout('template') %>
+
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">评分标准</legend>
+  <ol class="rules">
+    <li>
+      完成任务情况(25分):
+        <ol class="detail-rules">
+          <li>独立完成任务，并全面达到任务书提出的各项要求 : 21~25</li>
+          <li>基本独立完成任务，并达到任务书提出的各项要求 : 16~20</li>
+          <li>在导师指导下基本完成任务书提出的各项要求 : 11~15</li>
+          <li>未完成任务书提出的任务和要求 : 0~10</li>
+        </ol>
+    </li>
+    <li>
+      基本理论、基本知识掌握情况(25分):
+        <ol class="detail-rules">
+          <li>基本概念清楚，基本理论掌握扎实 : 21~25</li>
+          <li>基本概念比较清楚，基本理论掌握比较扎实 : 16~20</li>
+          <li>基本概念、基本理论掌握不够扎实 : 11~15</li>
+          <li>基本概念模糊，基本理论掌握差 : 0~10</li>
+        </ol>
+    </li>
+    <li>
+      文献综述及外文翻译应用能力(25分):
+        <ol class="detail-rules">
+          <li>文献综述能力强，译文切题，文理通顺 : 21~25</li>
+          <li>文献综述能力较强，译文切题，文理较通顺 : 16~20</li>
+          <li>文献综述能力一般，或译文欠通顺 : 11~15</li>
+          <li>文献综述能力差，或译文不通顺 : 0~10</li>
+        </ol>
+    </li>
+   
+    <li>
+      毕业设计(论文)质量(25分):
+      <ol class="detail-rules">
+        <li>方案设计正确规范，数据分析完备，分析结构规范，论文撰写语言精练通顺，图表质量高，图纸规范 : 21~25</li>
+        <li>方案设计较规范，数据分析完备，分析结构较规范，论文撰写语言较通顺，图表质量较高，图纸较规范 : 16~20</li>
+        <li>方案设计欠规范，数据分析欠完备，分析结构欠规范，论文撰写语言欠通顺，图表质量不够高，图纸不够规范 : 11~15</li>
+        <li>方案设计不规范，数据分析有错误，论文潦草，语言欠通顺，图表质量较差，图纸质量较差 : 0~10</li>
+      </ol>
+    </li>
+  </ol>
+</fieldset>
+
+<div class="in-detail">
+  <form id="score-area">
+    <p class=" width-half">
+      <label>学生学号：</label> <%= pro_info.stu_num%>
+    </p>
+    <p class=" width-half">
+      <label>学生姓名:</label> <%= pro_info.stu_name%>
+    </p>
+    <p>
+      <label>课题名称:</label> <%= pro_info.pro_name%>
+    </p>
+    <div>
+      <label>完成任务情况:</label>
+       <input class='full-input' type="number" min='0' max='25' id='completion' value=<%= pro_info.completion == null?"":pro_info.completion%>>
+    </div>
+    <div>
+      <label>理论、知识掌握情况:</label>
+      <input class="full-input" type="number" min='0' max='50' id='basic_status' value=<%= pro_info.basic_status == null?"":pro_info.basic_status%>>
+    </div>
+    <div>
+      <label>文献综述及外文翻译应用能力:</label>
+      <input class="full-input" type="number" min='0' max='50' id='application' value=<%= pro_info.application == null?"":pro_info.application%>>
+    </div>
+    <div>
+      <label>毕业设计(论文)质量:</label>
+      <input class="full-input" type="number" min='0' max='50' id='paper_quality' value=<%= pro_info.paper_quality == null?"":pro_info.paper_quality%>>
+    </div>
+    <p class="padding-b-15"></p>
+    <button id="sub_score" class="btn btn-success btn-block" data-id='<%= pro_info.pro_id%>'>提交</button>
+  
+  </form>
+</div>
+
+
+<%include ./included/detail_dialog.ejs%>
+
+<% script("../javascripts/sub_score.js") -%>

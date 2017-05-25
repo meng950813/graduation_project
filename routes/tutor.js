@@ -11,13 +11,12 @@ var g_vars 		=	require("../helper/variable");
 
 /* 导师默认页面：发布的所有课题的状态 */
 router.get("/",(req,res)=>{
-	console.log("this is tutor ");
 	publicFun.hasPower(req,res,g_vars.ID_TUTOR);
 
 	var user = req.session.user,
 			data = {
 				title 		: "tutor index",
-				username 	: user.tutor_name,
+				username 	: user.username,
 				identity 	: user.identity, 
 				nav_active 	: 2,
 
@@ -29,7 +28,7 @@ router.get("/",(req,res)=>{
 				]
 			};
 
-	tutorDAO.getList(user.tutor_id,(result)=>{
+	tutorDAO.getList(user.id,(result)=>{
 		if(result.length == 0){
 			console.log("empty list project ");
 			return;
@@ -55,7 +54,7 @@ router.get("/publish",(req,res)=>{
 
 	var data = {
 		title 		: "publish project",
-		username 	: user.tutor_name,
+		username 	: user.username,
 		identity 	: user.identity,
 
 		nav_active: 1,
@@ -76,7 +75,7 @@ router.get("/publish",(req,res)=>{
 		major_info: null
 	};
 
-	publicDAO.getMajor(user.tutor_id,(major_info)=>{
+	publicDAO.getMajor(user.id,(major_info)=>{
 		if(major_info.length <= 0){
 			console.log("can not get major info");
 			return;
@@ -103,7 +102,7 @@ router.post("/publish_project",(req,res)=>{
 
 	var data = req.body,
 			fun;
-	data.tutor_id = req.session.user.tutor_id;
+	data.tutor_id = req.session.user.id;
 
 	// 修改数据
 	if(data.pro_id != undefined){
@@ -129,7 +128,7 @@ router.post("/publish_project",(req,res)=>{
 	})
 });
 
-/* 导师提交评价 */
+/* 导师提交任务评价 */
 router.post('/review',(req,res)=>{
 	var data = req.body,
 			fun;
@@ -168,5 +167,6 @@ router.post('/review',(req,res)=>{
 		}
 	})
 });
+
 
 module.exports = router;

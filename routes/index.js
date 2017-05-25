@@ -68,9 +68,9 @@ router.post("/login",function(req, res, next){
 		if(identity === g_vars.ID_STUDENT){
 			req.session.user = {
 				// 学生信息 : id,学号,姓名,专业id,专业名,进度,答辩组id,
-				stu_id 			: result.stu_id,
-				stu_name 		: result.stu_name,
-				stu_num 		: result.stu_num,
+				id 					: result.stu_id,
+				username 		: result.stu_name,
+				num 				: result.stu_num,
 				pro_process : result.pro_process,
 				reply_group_id : result.reply_group_id,
 				identity 		: g_vars.ID_STUDENT, 
@@ -94,9 +94,10 @@ router.post("/login",function(req, res, next){
 		}
 		if(identity === g_vars.ID_TUTOR){
 			req.session.user = {
-				tutor_id 			: result.tutor_id,
-				tutor_name		: result.tutor_name,
-				identity 			: g_vars.ID_TUTOR
+				id 					: result.tutor_id,
+				username		: result.tutor_name,
+				num					: result.tutor_num,
+				identity 		: g_vars.ID_TUTOR
 			}
 		}
 		var redirectUrl =  publicFun.redirectTo(req.session.user);
@@ -158,46 +159,5 @@ function getTime(){
 	return (new Date()).getTime()+"__";
 }
 
-
-router.get("/reply",(req,res)=>{
-	
-	publicFun.toLogin(req,res);
-
-	var user = req.session.user;
-	
-	publicDAO.showReplyGroup(user,(group_info,tutor_info,stu_info)=>{
-		var data = {
-			title 			: "答辩组信息",
-			username 		: user.stu_name==undefined?user.tutor_name:user.stu_name,
-			identity 		: user.identity,
-			nav_active 	: g_vars.PROCESS_REPLY,
-
-			breadcrumbs : "流程管理 >> 答辩组信息",
-
-			prompt_text	: [
-				"1、查看所在答辩组的信息;"
-			]
-		};
-		if(group_info.length == 0 || tutor_info.length == 0|| stu_info.length == 0){
-			console.log("not info");
-			data.show = false;
-		}else{
-			data.show = true;
-			
-			data.group_info = group_info[0];
-
-			data.date = publicFun.formatDate(data.group_info.start_time);
-
-			data.tutor_info = [];
-			for(var i in tutor_info){
-				data.tutor_info[tutor_info[i].tutor_id] = tutor_info[i].tutor_name;
-			}
-
-			data.stu_info 	= stu_info;
-		}		
-		res.render("reply_group",data);
-	});
-
-});
 
 module.exports = router;

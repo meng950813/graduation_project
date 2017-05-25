@@ -51,9 +51,12 @@ app.use('/middle', require('./routes/stu_5_middle'));
 app.use('/draft', require('./routes/stu_6_draft'));
 app.use('/paper', require('./routes/stu_7_paper'));
 app.use('/comments', require('./routes/commets_to_tutor'));
-// app.use('/reply', require('./routes/reply_group'));
+app.use('/reply', require('./routes/reply_group'));
+app.use('/appraise', require('./routes/appraise_group'));
+app.use('/score', require('./routes/score'));
 // app.use('/upload', require('./routes/upload'));
 app.use('/tutor', require('./routes/tutor'));
+// app.use('/admin', require('./routes/admin'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

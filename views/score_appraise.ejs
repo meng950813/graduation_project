@@ -1,0 +1,96 @@
+<% layout('template') %>
+
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">评分标准</legend>
+  <ol class="rules">
+    <li>
+      毕业设计(论文)水平及实用价值(20分):
+       <!--  <ol class="detail-rules">
+         <li>知识综合应用程度高，论文有实用价值，文献综述及引用文质量高 : 16~20</li>
+         <li>知识综合应用程度较高，论文有价值，文献综述及引用文质量较高 : 10~15</li>
+         <li>有一定专业综合训练，论文无明显错误 : 6~10</li>
+         <li>专业综合训练不足或论文有明显错误 : 0~5</li>
+       </ol> -->
+    </li>
+    <li>
+      完成毕业设计(论文)任务情况(20分):
+       <!--  <ol class="detail-rules">
+         <li>全面完成任务，达到任务书提出的各项要求 : 16~20</li>
+         <li>较好完成任务，达到任务书提出的各项要求 : 10~15</li>
+         <li>基本达到任务书提出的各项要求 : 6~10</li>
+         <li未达到任务书提出的各项要求 : 0~5</li>
+       </ol> -->
+    </li>
+    <li>
+      毕业设计(论文)书面质量(20分):
+       <!--  <ol class="detail-rules">
+         <li>语言精练通顺，论文结构规范，图表质量高 : 16~20</li>
+         <li>语言较通顺，论文结构较规范，图表质量较高 : 10~15</li>
+         <li>语言欠通顺，论文欠规范，图表质量不够高 : 6~10</li>
+         <li>语言欠通顺，论文潦草，图表质量差 : 0~5</li>
+       </ol> -->
+    </li>
+    <li>
+      设计、计算、程序、图纸或实验水平(20分):
+        <!-- <ol class="detail-rules">
+          <li>方案设计正确，图纸规范，有一定难度，数据(实例)分析完备 : 16~20</li>
+          <li>方案设计较正确，图纸较规范，数据(实例)分析完备 : 10~15</li>
+          <li>方案设计欠规范，图纸欠规范，数据(实例)分析欠准确 : 6~10</li>
+          <li>方案设计不规范，图纸不规范，数据(实例)分析有错误 : 0~5</li>
+        </ol> -->
+    </li>
+    <li>
+      毕业设计(论文)工作量(20分):
+        <!-- <ol class="detail-rules">
+          <li>工作量饱满 : 16~20</li>
+          <li>工作量较饱满 : 10~15</li>
+          <li>工作量一般 : 6~10</li>
+          <li>工作量不足 : 0~5</li>
+        </ol> -->
+    </li>
+  </ol>
+</fieldset>
+
+<div class="in-detail">
+  <form id="score-area">
+    <p class=" width-half">
+      <label>学生学号：</label> <%= pro_info.stu_num%>
+    </p>
+    <p class=" width-half">
+      <label>学生姓名:</label> <%= pro_info.stu_name%>
+    </p>
+    <p>
+      <label>课题名称:</label> <%= pro_info.pro_name%>
+    </p>
+    <div>
+      <label>毕业设计(论文)水平及实用价值:</label>
+       <input class='full-input' type="number" min='0' max='20' id='paper_level' value=<%= pro_info.paper_level == null?"":pro_info.paper_level%>>
+    </div>
+    <div>
+      <label>完成毕业设计(论文)任务情况:</label>
+      <input class="full-input" type="number" min='0' max='20' id='completion' value=<%= pro_info.completion == null?"":pro_info.completion%>>
+    </div>
+    <div>
+      <label>毕业设计(论文)书面质量:</label>
+      <input class="full-input" type="number" min='0' max='20' id='quality' value=<%= pro_info.quality == null?"":pro_info.quality%>>
+    </div>
+    <div>
+      <label>设计、计算、程序、图纸或实验水平:</label>
+      <input class="full-input" type="number" min='0' max='20' id='design' value=<%= pro_info.design == null?"":pro_info.design%>>
+    </div>
+    <div>
+      <label> 毕业设计(论文)工作量:</label>
+      <input class="full-input" type="number" min='0' max='20' id='workload' value=<%= pro_info.workload == null?"":pro_info.workload%>>
+    </div>
+
+    <p class="padding-b-15"></p>
+    <button id="sub_score" class="btn btn-success btn-block" data-id='<%= pro_info.pro_id%>'>提交</button>
+  
+  </form>
+</div>
+
+
+<%include ./included/detail_dialog.ejs%>
+
+<% script("../javascripts/sub_score.js") -%>

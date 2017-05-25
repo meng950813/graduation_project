@@ -29,7 +29,7 @@ module.exports = {
 		// console.log("stu_major = "+stu_major);
 		var sql = `select project_info.*,tutor_name,choose_pro_info.status as apply_status 
 							from tutor_info,project_info 
-							left join choose_pro_info on project_info.pro_id=choose_pro_info.pro_id and choose_pro_info.stu_id=? 
+							left join choose_pro_info on project_info.pro_id=choose_pro_info.project_id and choose_pro_info.stu_id=? 
 							where project_info.major_id=? and project_info.publish_time>? and publisher=tutor_info.tutor_id`;
 		var nowYear = (new Date()).getFullYear();
 
@@ -55,12 +55,12 @@ module.exports = {
 	 */
 	choosePro : function(user_info,pro_info,callback){
 		// 从学号中获取入学年份
-		var num = user_info.stu_num.substring(0,2);
+		var num = user_info.num.substring(0,2);
 		// 学生信息：例 13软件工程xx(学号)
-		var title =num + user_info.major_name + user_info.stu_name + "("+ user_info.stu_num +") 申请您的课题："+pro_info.pro_name;
+		var title =num + user_info.major_name + user_info.stu_name + "("+ user_info.num +") 申请您的课题："+pro_info.pro_name;
 		console.log("title = " +title);
-		var sql = "insert into choose_pro_info(cho_id,stu_id,tutor_id,pro_id,title,status) values(null,?,?,?,?,0)";
-		var params = [user_info.stu_id,pro_info.tutor_id,pro_info.pro_id,title];
+		var sql = "insert into choose_pro_info(cho_id,stu_id,tutor_id,project_id,title,status) values(null,?,?,?,?,0)";
+		var params = [user_info.id,pro_info.tutor_id,pro_info.pro_id,title];
 		query(sql,params,function(error,result){
 			if(error){
 				console.log("add choose_pro error : "+error.message);
@@ -366,31 +366,31 @@ module.exports = {
 	 * @return {[type]}   [description]
 	 */
 	showComments : function(stu_id,callback){
-		var nowYear = (new Date()).getFullYear(),
-				sql = `select tutor_name,score from reply_score_info,tutor_info
-							where stu_id=? and reply_score_info.tutor_id=tutor_info.tutor_id
-							and publish_time>?`,
-				params = [stu_id,nowYear];
-		query(sql,params,(error,score_info)=>{
-			if(error){
-				console.log("showComments score "+ error.message);
-				return g_vars.ERROR;
-			}
-			if(score_info[0].score != NULL){
-				sql = `select comments from student_info where stu_id=?`;
-				params = [stu_id];
-				query(sql,params,(error,result)=>{
-					if(error){
-						console.log("showComments comments " + error.message);
-						return g_vars.ERROR;
-					}
-					callback(score_info,comments);
-				})
-			}
-			else{
-				callback(score_info);
-			}
-		});
+		// var nowYear = (new Date()).getFullYear(),
+		// 		sql = `select tutor_name,work_report,reply_status from reply_score_info,tutor_info
+		// 					where stu_id=? and reply_score_info.tutor_id=tutor_info.tutor_id
+		// 					and publish_time>?`,
+		// 		params = [stu_id,nowYear];
+		// query(sql,params,(error,score_info)=>{
+		// 	if(error){
+		// 		console.log("showComments score "+ error.message);
+		// 		return g_vars.ERROR;
+		// 	}
+		// 	if(score_info[0].score != NULL){
+		// 		sql = `select comments from student_info where stu_id=?`;
+		// 		params = [stu_id];
+		// 		query(sql,params,(error,result)=>{
+		// 			if(error){
+		// 				console.log("showComments comments " + error.message);
+		// 				return g_vars.ERROR;
+		// 			}
+		// 			callback(score_info,comments);
+		// 		})
+		// 	}
+		// 	else{
+		// 		callback(score_info);
+		// 	}
+		// });
 	},
 
 
@@ -402,5 +402,8 @@ module.exports = {
 	 */
 	uploadComments : function(info,callback){
 		
-	}
+	},
+
+
+	
 }

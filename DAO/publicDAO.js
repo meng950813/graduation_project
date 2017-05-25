@@ -266,23 +266,24 @@ module.exports = {
 	/**
 	 * 查看答辩组信息
 	 *
-	 * @param {[type]}   info  [reply_group_id/tutor_id]
+	 * @param {[type]}   info  [pro_id/tutor_id]
 	 *
 	 * @return {[type]}   [返回答辩组所有学生信息，答辩组信息，及对应导师信息]
 	 */
 	showReplyGroup : function(info,callback){
 		var sql,params;
-		if(info.reply_group_id){
+		if(info.pro_id){
 			/* 返回所在答辩组所有学生姓名，学号，答辩时间，地点等信息 */
 			/*sql = `select stu_name,stu_num,pro_name,reply_order,reply_group_info.* 
 								from student_info
 								left join reply_group_info on group_id=? and reply_group_info.status=0 
 								left join project_info on student_info.project_id=project_info.pro_id
-								where reply_group_id=?
+								where pro_id=?
 								order by student_info.reply_order`;*/
 			// 获取答辩组信息 
-			sql = `select * from reply_group_info where group_id=?`;
-			params = [info.reply_group_id];
+			sql = `select * from reply_group_info where group_id in 
+						(select group_id from reply_score_info where project_id=? group by(group_id))`;
+			params = [info.pro_id];
 		}
 		else if(info.tutor_id){
 			var nowYear = (new Date()).getFullYear();
@@ -294,12 +295,14 @@ module.exports = {
 						where reply_score_info.tutor_id=?
 						order by student_info.reply_order`;*/
 			sql = `select reply_group_info.* from reply_group_info,reply_score_info
-						where reply_group_info.start_time>? and reply_group_info.group_id = reply_score_info.group_id and reply_score_info.tutor_id=?`;
+						where reply_group_info.start_time>? and reply_group_info.group_id = reply_score_info.group_id
+						and reply_score_info.tutor_id=?`;
 			params = [nowYear,info.tutor_id];
 		}else{
 			console.log("params error");
 			return;
 		}
+
 
 		query(sql,params,function(error,group_info){
 			if(error){
@@ -319,20 +322,72 @@ module.exports = {
 					console.log("showReplyGroup -- get tutor_info : "+error.message);
 					return;
 				}
-				sql = `select stu_name,stu_num,pro_name,major_name from student_info,project_info,reply_score_info,major_info
-				where group_id=? and reply_score_info.stu_id=student_info.stu_id and project_id=project_info.pro_id and stu_major=major_info.major_id
-				group by(reply_score_info.stu_id) order by(reply_score_info.score_id)`;
-				query(sql,params,(error,stu_info)=>{
-					if(error){
-						console.log("showReplyGroup -- get stu_info : "+error.message);
-						return;
-					}
-					callback(group_info,tutor_info,stu_info);
-				});
+				/* 获取所在答辩组所有学生信息 */
+				if(info.tutor_id){
+					sql = `select stu_name,stu_num,pro_name,pro_id,major_name 
+					from student_info,project_info,reply_score_info,major_info
+					where group_id=? and reply_score_info.project_id=student_info.project_id 
+					and reply_score_info.project_id=project_info.pro_id 
+					and stu_major=major_info.major_id
+					group by(reply_score_info.project_id) order by(reply_score_info.score_id)`;
+					query(sql,params,(error,stu_info)=>{
+						if(error){
+							console.log("showReplyGroup -- get stu_info : "+error.message);
+							return;
+						}
+						callback(group_info,tutor_info,stu_info);
+					});
+				}
+				else{
+					callback(group_info,tutor_info,null);
+				}
 			})
 		});
 	},
 
+
+
+	showAppraiseGroup : (info,callback)=>{
+		var sql,params=[];
+		if(info.pro_id){
+			sql = `select appraise_group_info.*,tutor_name,tutor_num
+							from appraise_info,appraise_group_info,tutor_info
+							left join appraise_group_info on appraise_group_info.appraise_id = appraise_info.appraise_id
+							left join tutor_info on tutor_info.tutor_id = appraise_group_info.tutor_id
+							where appraise_info.project_id=?`;
+			params = [info.pro_id];
+		}else if(info.tutor_id){
+			sql = `select * from appraise_group_info where tutor_id=?`;
+			params = [info.tutor_id];
+		}else{
+			console.log("params error");
+			return;
+		}
+		query(sql,params,(error,group_info)=>{
+			if(error){
+				console.log("get appraise group error : "+error.message);
+				return;
+			}
+			if(info.tutor_id){
+				params = [group_info[0].appraise_id];
+				sql = `select stu_name,stu_num,major_name,pro_id,pro_name,pro_type,pro_nature
+							from appraise_info
+							left join project_info on project_info.pro_id = appraise_info.project_id
+							left join student_info on student_info.project_id = appraise_info.project_id
+							left join major_info on major_info.major_id = student_info.stu_major
+							where appraise_id=?`;
+				query(sql,params,(err,stu_info)=>{
+					if(err){
+						console.log("get studnet info err : "+err.message);
+					}
+					callback(group_info,stu_info);
+				});
+			}
+			else{
+				callback(group_info,null);
+			}
+		});
+	},
 
 	/**
 	 * 通过传入的导师id,获取所属学院的所有专业

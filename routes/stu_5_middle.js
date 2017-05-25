@@ -39,7 +39,7 @@ router.get("/detail",function(req, res){
 
 	var data = {
 			title 			: "this is middle detail",
-			username 		: user.stu_name,
+			username 		: user.username,
 			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_MIDDLE,
 			breadcrumbs : "流程管理 >> 中期检查",

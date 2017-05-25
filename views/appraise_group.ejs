@@ -3,25 +3,18 @@
 <fieldset id="promptText" class="promptText">
   <legend class="color-danger">相关提示</legend>
   <ol>
-    <li>查看所在答辩组的信息</li>
+    <li>查看所在评审组信息</li>
   </ol>
 </fieldset>
 	
 <% if(show == true) {%>
 	<div  class="promptText border-2px-warning">
 		<div class="reply-content">
-			<p>所在答辩组：<%= group_info.group_name%></p>
-			<p>答辩地点：<%= group_info.address%></p>
-			<p>答辩日期：<%= date%></p>
-			<p>答辩组组长：<%= tutor_info[group_info.leader]%></p>
-			<p>答辩组成员：
-				<% for(var item in tutor_info){%>
-					<%= tutor_info[item]%> &nbsp;&nbsp;
-				<%}%>
-			</p>
-		
+			<p>审核地点：<%= group_info.address%></p>
+			<p>审核日期：<%= date%></p>
+			<p>审核导师：<%= group_info.tutor_name%> ( <%= group_info.tutor_num%> )</p>
 		<% if(stu_info != null) { %>
-			<h3 class="color-primary">答辩名单：</h3>
+			<h3 class="color-primary">学生名单：</h3>
 		</div>
 		<div class="text-center">
 			<table class="show-process">
@@ -38,7 +31,8 @@
 					</tr>
 				</thead>
 				<tbody>
-					<% for(var i in stu_info) { %>
+					<% for(var i in stu_info) { 
+						if(stu_info)%>
 					<tr>
 						<td><%= (parseInt(i,10)+1)%></td>
 						<td><%= stu_info[i].stu_num%></td>
@@ -47,7 +41,7 @@
 						<td><%= stu_info[i].pro_name%></td>
 						<% if(identity == 1) { %>
 							<td>
-								<a class="btn btn-info btn-block" href="/reply/score?id=<%= stu_info[i].pro_id%>"> 评分 </a>
+								<a class="btn btn-info btn-block" href="/appraise/score?id=<%= stu_info[i].pro_id%>"> 去评分 </a>
 							</td>
 						<% } %>
 					</tr>

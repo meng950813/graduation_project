@@ -7,11 +7,16 @@
 
 @import url("header.less");
 
+@import url("nav.less");
+@import url("show_area.less");
+
 @import url("detail.less");
 
 @import url("publish_project.less");
 
 @import url("dialog.less");
+
+@import url("score_area.less");
 
 /* this is common css */
 html{
@@ -51,118 +56,12 @@ ul,ol,dl{
 }
 
 .container{
+	position: relative;
 	width: @max_width;
 	height: 100%;
 	margin: 0 auto;
 	.clearfix();
 }
-
-
-
-/* this is nav */
-#nav{
-	width: 180px;
-	height: 100%;
-	float: left;
-	border-right: 1px solid #333;
-	background: @color-info;
-	font-size: 1.4rem;
-	overflow: hidden;
-	.clearfix();
-
-	.nav-tip{
-		h3{
-			height: 2.5rem;
-			line-height: 2.5rem;
-			font-size: 1.2em;
-			padding-left: 1rem;
-			background: @color-primary;
-			color: @color-white;
-		}
-		li{
-			height: 2.5rem;
-			line-height: 2.5rem;
-			padding: 0 1.5rem;
-			border-top: 1px solid #ddd;
-			button{
-				border: none;
-				font-size: .5rem!important;
-				font-weight: 200!important;
-				font-style: normal;
-			}
-		}
-
-		.glyphicon{
-			zoom:.75;
-			-webkit-transform:scale(.75);
-			-moz-transform:scale(.75);
-			transform:scale(.75);
-			&:before{
-				content: "\e075";
-			}
-		}
-	}
-}
-
-#show-area{
-	height: 100%;
-	margin-left: 180px;
-	font-size: 1.4rem;
-	// background-color: @color-success;
-	.clearfix();
-
-	
-	/* 面包屑导航 */
-	.breadcrumbs{
-		padding-left: 2rem;
-		line-height: 3;
-		// height: 30px;
-		background: url("../images/table-top.jpg");
-		color: @color-warning;
-		border-bottom: 1px solid @color-info;
-	}
-}
-
-/* 相关提示 */
-.promptText{
-	margin: 1.5rem 3rem;
-	border-color: @color-warning;
-	font-size: 1.5rem;
-	line-height: 2rem;
-	legend{
-		font-size: 1.8rem;
-	}
-	.reply-content{
-		line-height: 2;
-		padding: 10px 20px;
-		background: @bg-color;
-	}
-}
-
-/* 进度显示区域 */
-.show-process{
-	width: 100%;
-	border-top: 1px solid #B6EBDD;
-	text-align: center;
-	vertical-align: middle;
-	border-collapse: collapse;
-	font-size: 1.4rem;
-
-	td,th{
-		border-bottom: 1px solid #B6EBDD;
-		border-right: 1px solid #B6EBDD;
-	}
-	th{
-		height: 30px;
-		background: url("../images/table-top.jpg");
-	}
-	td{
-		max-width: 350px;
-		padding: .5rem;
-		line-height: 2;
-	}
-}
-
 
 #footer{
 	background: @color-success;

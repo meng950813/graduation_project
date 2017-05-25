@@ -1,85 +1,109 @@
 <nav id="nav">
-	<ul class="nav-tip">
-		<h3>流程管理</h3>
-		<li 
-			<% if(nav_active == 1) { %>
-				 class="nav-active"
-			<% } %>
-		 >
-			<span class="glyphicon"></span>
-			<a href="/tutor/publish">发布课题</a>
-		</li>
-		<li
-			<%  if(nav_active == 1) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="/tutor">查看课题进度</a>
-		</li>
-		<li
-			<%  if(nav_active == 9) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="/tutor">查看教师评价</a>
-		</li>
-		<li
-			<%  if(nav_active == 8) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="/reply">查看答辩信息</a>
-		</li>
+	<nav id="nav-container">
+		<ul class="nav-tip">
+			<h3>流程管理</h3>
+			<li 
+				<% if(nav_active == 1) { %>
+					 class="nav-active"
+				<% } %>
+			 >
+				<a href="/tutor/publish"><span class="glyphicon"></span>发布课题</a>
+			</li>
+
+			<li
+				<%  if(nav_active == 2) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/tutor"><span class="glyphicon"></span>查看课题进度</a>
+			</li>
+			
+			<li
+				<%  if(nav_active == 5) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/tutor/usual_grades"><span class="glyphicon"></span>填写平时分</a>
+			</li>
+			<li
+				<%  if(nav_active == 6) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/tutor/tutor_socre"><span class="glyphicon"></span>指导教师评分</a>
+			</li>
+			<li
+				<%  if(nav_active == 17) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/appraise"><span class="glyphicon"></span>查看评阅信息</a>
+			</li>
+			<li
+				<%  if(nav_active == 8) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/reply"><span class="glyphicon"></span>查看答辩组信息</a>
+			</li>
+			<li
+				<%  if(nav_active == 10) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/tutor/assess"><span class="glyphicon"></span>考核卡片</a>
+			</li>
+
+			<li
+				<%  if(nav_active == 11) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/tutor"><span class="glyphicon"></span>查看教师评价</a>
+			</li>
+
+			<li
+				<%  if(nav_active == 12) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="javascript:void(0);"><span class="glyphicon"></span>表格材料打印</a>
+			</li>
+		</ul>
 		
-		<li
-			<%  if(nav_active == 11) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="javascript:void(0);">表格材料打印</a>
-		</li>
-	</ul>
-	
-	<ul class="nav-tip">
-		<h3>账号管理</h3>
-		<li
-			<%  if(nav_active == 14) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="javascript:void(0);">修改密码</a>
-		</li>
-		<li
-			<%  if(nav_active == 15) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="javascript:void(0);">个人信息</a>
-		</li>
-	</ul>
-	<ul class="nav-tip">
-		<h3>交流互动</h3>
-		<li
-			<%  if(nav_active == 16) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="javascript:void(0);">收件箱</a>
-		</li>
-		<li
-			<%  if(nav_active == 17) { %>
-				 class="nav-active"
-			<% } %>
-		>
-			<span class="glyphicon"></span>
-			<a href="javascript:void(0);">发件箱</a>
-		</li>
-	</ul>
+		<ul class="nav-tip">
+			<h3>账号管理</h3>
+			<li
+				<%  if(nav_active == 31) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="javascript:void(0);"><span class="glyphicon"></span>修改密码</a>
+			</li>
+			<li
+				<%  if(nav_active == 32) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="javascript:void(0);"><span class="glyphicon"></span>个人信息</a>
+			</li>
+		</ul>
+		<ul class="nav-tip">
+			<h3>交流互动</h3>
+			<li
+				<%  if(nav_active == 41) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="javascript:void(0);"><span class="glyphicon"></span>收件箱</a>
+			</li>
+			<li
+				<%  if(nav_active == 42) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="javascript:void(0);"><span class="glyphicon"></span>发件箱</a>
+			</li>
+		</ul>
+	</nav>
 </nav>

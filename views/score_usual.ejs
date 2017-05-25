@@ -1,0 +1,69 @@
+<% layout('template') %>
+
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">评分标准</legend>
+  <ol class="rules">
+    <li>
+      工作态度和遵守纪律情况(25分):
+        <ol class="detail-rules">
+          <li>工作认真，积极认真，作风严谨，遵守纪律 : 21~25</li>
+          <li>工作较努力、主动、遵守纪律 : 16~20</li>
+          <li>工作不够主动、认真，对自己要求不高，能遵守纪律 : 11~15</li>
+          <li>工作不认真、不主动或不遵守纪律 : 0~10</li>
+        </ol>
+    </li>
+    <li>
+      工作能力(50分):
+      <ol class="detail-rules">
+        <li>分析、动手能力强，某些问题上有独立见解 : 41~50</li>
+        <li>分析、动手能力较强 : 31~40</li>
+        <li>分析、动手能力一般 : 21~30</li>
+        <li>分析、动手能力较差 : 0~20</li>
+      </ol>
+    </li>
+    <li>
+      开题及中期检查情况(25分):
+      <ol class="detail-rules">
+        <li>认真按计划完成课题工作，开题和中期检查报告内容全面、翔实 : 21~25</li>
+        <li>按计划完成课题工作，开题和中期检查报告内容较全面、翔实 : 16~20</li>
+        <li>能基本计划完成课题工作，开题和中期检查报告内容不够全面、翔实 : 11~15</li>
+        <li>未能按计划完成课题工作，未能按期完成开题和中期检查报告或内容简单、粗糙 : 0~10</li>
+      </ol>
+    </li>
+  </ol>
+</fieldset>
+
+<div class="in-detail">
+  <form id="score-area">
+    <p class=" width-half">
+      <label>学生学号：</label> <%= pro_info.stu_num%>
+    </p>
+    <p class=" width-half">
+      <label>学生姓名:</label> <%= pro_info.stu_name%>
+    </p>
+    <p>
+      <label>课题名称:</label> <%= pro_info.pro_name%>
+    </p>
+    <div>
+      <label>工作态度和遵守纪律情况:</label>
+       <input class='full-input' type="number" min='0' max='25' id='attitude' value=<%= pro_info.attitude == null?"":pro_info.attitude%>>
+    </div>
+    <div>
+      <label>工作能力:</label>
+      <input class="full-input" type="number" min='0' max='50' id='ablity' value=<%= pro_info.ablity == null?"":pro_info.ablity%>>
+    </div>
+    <div>
+      <label>开题及中期检查情况:</label>
+      <input class="full-input" type="number" min='0' max='50' id='checking' value=<%= pro_info.checking == null?"":pro_info.checking%>>
+    </div>
+    <p class="padding-b-15"></p>
+    <button id="sub_score" class="btn btn-success btn-block" data-id='<%= pro_info.pro_id%>'>提交</button>
+  
+  </form>
+</div>
+
+
+<%include ./included/detail_dialog.ejs%>
+
+<% script("../javascripts/sub_score.js") -%>

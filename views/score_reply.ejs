@@ -1,0 +1,56 @@
+<% layout('template') %>
+
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">评分标准</legend>
+  <ol class="rules">
+    <li>
+      毕业设计（论文）工作汇报(40分):
+        <ol class="detail-rules">
+          <li>讲述流利，重点突出，提纲图表恰到好处 : 31-40</li>
+          <li>内容介绍清楚，抓住了重点，提纲图表运用正确 : 21~30</li>
+          <li>内容介绍基本清楚，无原则性错误 : 11~20</li>
+          <li>对论文内容不熟悉，叙述凌乱，错误多 : 0~10</li>
+        </ol>
+    </li>
+    <li>
+      答辩情况(60分):
+      <ol class="detail-rules">
+        <li>反应灵敏，思路清晰，回答问题正确 : 51~60</li>
+        <li>思路清晰，表达清楚，回答问题基本正确 : 41~50</li>
+        <li>回答问题基本正确，有次要错误 : 31~40</li>
+        <li>主要问题答非所问，有较多原则性错误 : 0~30</li>
+      </ol>
+    </li>
+  </ol>
+</fieldset>
+
+<div class="in-detail">
+  <form id="score-area">
+    <p class=" width-half">
+      <label>学生学号：</label> <%= pro_info.stu_num%>
+    </p>
+    <p class=" width-half">
+      <label>学生姓名:</label> <%= pro_info.stu_name%>
+    </p>
+    <p>
+      <label>课题名称:</label> <%= pro_info.pro_name%>
+    </p>
+    <div class="width-half">
+      <label>工作汇报成绩:</label>
+       <input class='full-input' type="number" min='0' max='40' id='work_report' value=<%= pro_info.work_report == null?"":pro_info.work_report%>>
+    </div>
+    <div class="width-half">
+      <label>答辩情况:</label>
+      <input class="full-input" type="number" min='0' max='60' id='reply_status' value=<%= pro_info.reply_status == null?"":pro_info.reply_status%>>
+    </div>
+    <p class="padding-b-15"></p>
+    <button id="sub_score" class="btn btn-success btn-block" data-id='<%= pro_info.pro_id%>'>提交</button>
+  
+  </form>
+</div>
+
+
+<%include ./included/detail_dialog.ejs%>
+
+<% script("../javascripts/sub_score.js") -%>

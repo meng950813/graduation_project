@@ -26,7 +26,7 @@ router.get("/", (req,res,next)=>{
 
 	var data = {
 			title 			: "this is choose",
-			username 		: user.stu_name,
+			username 		: user.username,
 			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_SELECT,
 			breadcrumbs : " 流程管理 >> 选择课题",
@@ -55,13 +55,16 @@ router.get("/", (req,res,next)=>{
 
 /* 选题,根据session中的stu_id 及传来的pro_id,*/
 router.post("/choosePro",(req,res,next)=>{
+	console.log("this choose project");
 
 	publicFun.hasPower(req,res,g_vars.ID_STUDENT);
+	console.log("this choose project");
 	
 	var pro_info 	= req.body,
 			user_info = req.session.user;
 
 	stuDAO.choosePro(user_info,pro_info,function(result){
+		console.log("now in stuDAO "+ result);
 		/* 插入失败 */
 		if(result == undefined){
 			res.json({ok:false});

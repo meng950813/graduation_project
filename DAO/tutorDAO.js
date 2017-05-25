@@ -3,8 +3,6 @@
  */
 var query = require("../helper/createMysqlPool");
 
-var publicDAO = require("./publicDAO");
-
 // 全局变量
 var g_vars = require("../helper/variable");
 
@@ -332,5 +330,4 @@ module.exports = {
 			callback(result);
 		});
 	}
-
 }

@@ -104,6 +104,23 @@ window.AJAX = HTMLElement.prototype.AJAX  = {
 
 
 
+
+/* 设置导航栏高度 */
+function set_nav_height(){
+	var nav_container = $("#nav-container"),
+			nav = nav_container.clientHeight;
+	var article = $("#article").clientHeight;
+	if(nav < article){
+		nav_container.style.position="absolute";
+	}
+}
+set_nav_height();
+
+
+
+
+
+
 /**
  * 实现文件上传及特效
  *
@@ -349,6 +366,7 @@ stuUploadContent.prototype.getAreaText = function(){
  */
 function getValue(target){
 	// console.log(target);
+	if(target == null || target == undefined) return null;
   var value = target.value.trim();
   if( value == "" ){
     classie.add(target,"border-danger");
@@ -440,3 +458,87 @@ uploadReview.prototype.listenAreaChange = function(){
   	}
 	}.bind(this),false);
 }
+
+
+
+
+
+/**
+ * 导师提交评分的函数
+ *
+ * @param {[type]} sub_btn    [提交按钮]
+ * @param {[type]} dialog_obj [弹出窗对象]
+ * @param {[type]} input_obj  [输入框的父元素，用于添加监听函数]
+ * @param {[type]} url  			[上传路径]
+ * @param {[type]} data  			[输入参数]
+ *
+ * @return {[type]} [description]
+ */
+function  sub_score(sub_btn,dialog_obj,input_parent,url,data){
+	this.sub_btn 			= sub_btn;
+	this.dialog_obj 	= dialog_obj;
+	this.input_parent = input_parent;
+	this.url 					= url;
+
+	this.data 				= data;
+
+	// 当内容修改时才能提交
+	this.canSubmit  = false;
+
+	// 设置响应事件
+	this.setEvent();
+
+	// 设置点击上传函数
+	this.sub_btn.click = this.submit_score.bind(this,event);
+}
+
+sub_score.prototype.setEvent = function(){
+	var eventName = "input";
+	if(isIE()){
+		eventName = "propertychange";
+	}
+	this.input_parent.addEventListener(eventName,function(event){
+		var target = event.target;
+		if(target.nodeName == "INPUT"){
+			
+			this.canSubmit = true;
+
+			var max 	= parseInt(target.getAttribute("max"),10),
+					value = parseInt(target.value,10);
+			if(value > max || value < 0){
+				classie.add(target,"border-danger");
+				this.canSubmit = false;
+			}else {
+				classie.remove(target,"border-danger");
+			}
+		}
+	}.bind(this),false);
+}
+sub_score.prototype.submit_score = function(event){
+
+	for(var key in this.data){
+		var score = getValue($("#"+key));
+		if(score == null) return;
+		this.data[key] = parseInt(score,10);
+	}
+
+	var pro_id = parseInt(event.target.getAttribute("data-id"),10);
+
+	if(isNaN(pro_id) || pro_id < 1) return;
+
+	if(this.canSubmit){
+		
+		this.data.pro_id = pro_id;
+
+		AJAX.post(this.url,this.data,function(result){
+			if(result.ok == true){
+				this.dialog.showResult(true);
+			}
+			else{
+				this.dialog.showResult(false);
+			}
+		})
+	}
+}
+
+

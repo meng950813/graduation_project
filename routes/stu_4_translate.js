@@ -40,7 +40,7 @@ router.get("/detail",function(req, res){
 
 	var data = {
 			title 			: "this is translate detail",
-			username 		: user.stu_name,
+			username 		: user.username,
 			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_TRANSLATE,
 			breadcrumbs : "流程管理 >> 文献综述或外文翻译",

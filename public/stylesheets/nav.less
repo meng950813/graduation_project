@@ -1,0 +1,42 @@
+/* this is nav */
+#nav{
+	float: left;
+	.clearfix();
+}
+#nav-container{
+	width: 180px;
+	height: 100%;
+	border-right: 1px solid #333;
+	background: @color-info;
+	font-size: 1.4rem;
+	// position: absolute;
+	.clearfix();
+
+	.nav-tip{
+		a,h3{
+			height: 2.5rem;
+			line-height: 2.5rem;
+			border-bottom: 1px solid #ddd;
+		}
+		h3{
+			font-size: 1.2em;
+			padding-left: 1rem;
+			background: @color-primary;
+			color: @color-white;
+		}
+		a{
+			padding: 0 1.5rem;
+			display: block;
+		}
+
+		.glyphicon{
+			zoom:.75;
+			-webkit-transform:scale(.75);
+			-moz-transform:scale(.75);
+			transform:scale(.75);
+			&:before{
+				content: "\e075";
+			}
+		}
+	}
+}

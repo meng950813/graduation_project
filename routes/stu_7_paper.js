@@ -44,7 +44,7 @@ router.get("/detail",function(req, res){
 
 	var data = {
 			title 			: "this is paper detail",
-			username 		: user.stu_name,
+			username 		: user.username,
 			identity 		: user.identity,
 			nav_active 	: g_vars.PROCESS_PAPER,
 			breadcrumbs : "流程管理 >> 论文正稿",
