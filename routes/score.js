@@ -118,8 +118,9 @@ router.get("/usual_grades",(req,res)=>{
 		publicFun.formatProjectType(data.pro_info);
 
 		scoreDAO.getScoreList(user.id,0,(score_info)=>{
+			data.path = "usual_grades";
 			data.score_info = setArrToHash(score_info);
-
+	
 			res.render("score_page",data);
 		});
 	});
@@ -185,6 +186,7 @@ router.get("/tutor_score",(req,res)=>{
 		publicFun.formatProjectType(data.pro_info);
 
 		scoreDAO.getScoreList(user.id,1,(score_info)=>{
+			data.path = "tutor_score";
 			data.score_info = setArrToHash(score_info);
 			res.render("score_page",data);
 		});
@@ -226,8 +228,8 @@ router.post("/usual_grades",(req,res)=>{
 	publicFun.hasPower(req,res,g_vars.ID_TUTOR);
 	var info = req.body;
 	scoreDAO.updateUsualGrades(info,(result)=>{
-		console.log(result);
-		console.dir(result);
+		// console.log(result);
+		// console.dir(result);
 		if(result.affectedRows > 0){
 			res.json({ok:true});
 		}
@@ -356,7 +358,7 @@ router.post("/upload_comments",(req,res)=>{
 var setArrToHash = (array)=>{
 	var hashArr = [];
 	for(var i in array){
-		hashArr[array[i].pro_id] = array[i];
+		hashArr[array[i].project_id] = array[i];
 	}
 	return hashArr;
 }

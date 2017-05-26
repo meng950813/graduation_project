@@ -44,10 +44,10 @@
           (<%= pro_info[i].stu_num %>)
         </td>
         <td>
-          <% if(score_info[pro_info[i].pro_id] != undefined) { %>
-            <a class="btn btn-block btn-success" href="/score/usual_grades/detail?id=<%= pro_info[i].pro_id%>">查看评分</a>
+          <%if(score_info[pro_info[i].pro_id] != undefined) { %>
+            <a class="btn btn-block btn-success" href="/score/<%= path%>/detail?id=<%= pro_info[i].pro_id%>">查看评分</a>
           <% } else {%>
-            <a class="btn btn-block btn-primary" href="/score/usual_grades/detail?id=<%= pro_info[i].pro_id%>">去评分</a>
+            <a class="btn btn-block btn-primary" href="/score/<%= path%>/detail?id=<%= pro_info[i].pro_id%>">去评分</a>
           <% }} %>
         </td>
       </tr>

@@ -1,0 +1,30 @@
+<% layout('template') %>
+<div id="choose-state">
+	<div class="head-tip">
+		<span class="tag-btn show">最新申请</span>
+		<!-- <span class="tag-btn">历史申请</span> -->
+	</div>
+	<div id="new-apply" class="show-apply apply-area">
+		<%if(no_info == true){%>
+			<h3>暂无申请信息</h3>
+		<%}else{%>
+			<%for(var i in info_list){%>
+				<div class="line" title="<%= info_list[i].pro_name%>">
+					<%= info_list[i].title%>
+					<div class="options">
+						<button class="btn btn-success agree"	data-id="<%= info_list[i].pro_id%>" data-stu="<%= info_list[i].stu_id%>" data-cho="<%= info_list[i].cho_id%>">
+							同意
+						</button>
+						<button class="btn btn-danger reject" data-id="<%= info_list[i].pro_id%>" data-stu="<%= info_list[i].stu_id%>" data-cho="<%= info_list[i].cho_id%>">
+							拒绝
+						</button>
+					</div>
+				</div>
+			<%}%>
+		<%}%>
+	</div>
+	<div id="history-apply" class="apply-area"></div>
+</div>
+
+<% include ./included/detail_dialog.ejs%>
+<% script("../javascripts/choose_state.js") -%>

@@ -128,26 +128,25 @@ module.exports = {
 	 	// 同意
 	 	if(info.result === g_vars.STATUS_PASS){
 		 	// 返回值 ：0 ：已被选择，不能重复选择 	1 ：一切成功
-			var back;
-			sql = "call dealSelectProject(?,?,?,?,?)";
-			params = [info.stu_id,info.pro_id,info.cho_id,g_vars.STATUS_PASS,back];
+			sql = "call dealSelectProject(?,?,?)";
+			params = [info.cho_id,info.stu_id,info.pro_id];
 
-			query(sql,params,function(error){
+			query(sql,params,function(error,result){
 				if(error){
 					console.log("dealSelectProject : "+error.message);
 					return g_vars.ERROR;
 				}
-				console.log("返回值 ： " + back);
-				callback(back);
+				
+				callback(result);
 			});
 		}
 		
 		// 拒绝:给学生发私信，告知已被拒绝
 		else{
 			info.title = "你申请的课题："+info.pro_name+"  被导师拒绝, 辣鸡";
-
-			sql = "insert into contact_info(con_id,sender_id,receiver_id,title,content,type) values(null,?,?,null,4)";
-			params = [info.tutor_id,info.stu_id,info.title];
+			/* 拒绝 ： cho_id , sender, receiver,title */
+			sql = "call rejectSelectProject(?,?,?,?)";
+			params = [info.cho_id,info.tutor_id,info.stu_id,info.title];
 			query(sql,params,function(error,result){
 			if(error){
 				console.log("refuseApply : "+ error.message);
@@ -158,7 +157,23 @@ module.exports = {
 		}
 	},
 
-
+	/**
+	 * 获取所有未处理的选题申请
+	 *
+	 * @param {[type]}   tutor_id [description]
+	 */
+	getSelectInfo : (tutor_id,callback)=>{
+		var sql = `select choose_pro_info.*,pro_id,pro_name from choose_pro_info,project_info
+							where tutor_id=? and  choose_pro_info.status=0 and project_id=pro_id
+							order by choose_pro_info.publish_time desc`;
+		query(sql,[tutor_id],(error,result)=>{
+			if(error){
+				console.log("get select error" + error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
 
 
 
@@ -338,7 +353,7 @@ module.exports = {
 	 */
 	getAssessList : (tutor_id,callback)=>{
 		var sql,nowYear = (new Date()).getFullYear();
-		sql = `select stu_name,stu_num,pro_id,pro_name,pro_type,pro_nature,assessment_info.*
+		sql = `select stu_name,stu_num,pro_id,pro_name,pro_type,pro_nature,assess_comments as assess
 					from project_info
 					left join student_info on pro_id = student_info.project_id
 					left join assessment_info on pro_id = assessment_info.project_id

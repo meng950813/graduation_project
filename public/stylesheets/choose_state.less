@@ -1,0 +1,65 @@
+#choose-state{
+	font-size:16px; 
+	padding: 10px; 
+
+	.head-tip{
+		height: 48px;
+		padding-left: 100px;
+		border-bottom: 1px solid #aaa;
+	
+		.tag-btn{
+			display: inline-block;
+			width: 100px;
+			line-height: 46px;
+			border: 1px solid #aaa;
+			text-align: center;
+			background: #fff;
+			cursor: pointer;
+			&:hover{
+    		box-shadow:inset 0 3px 5px rgba(0,0,0,.125);
+			}
+		}
+		.tag-btn.show{
+			line-height: 48px;
+			border-bottom: none;
+    	box-shadow:inset 0 3px 5px rgba(0,0,0,.125);
+		}
+	}
+	
+	.apply-area{
+		display: none;
+		.line{
+			padding-left: 15px;
+			position: relative;
+			overflow: hidden;
+			
+			padding-right: 125px;
+
+			border-bottom: 1px solid #ccc;
+
+			height: 48px;
+			line-height: 48px;
+			
+			-webkit-transition:height .15s;
+			-moz-transition:height .15s;
+			transition:height .15s;
+			background: #fff;
+				&:hover{
+					background: #fafaf8;
+				}
+			.options{
+				width: 120px;
+				position: absolute;
+				top: 0;
+				right: 10px;
+				bottom: 0;
+			}
+		}
+		.line.dealed{
+			height: 0px;
+		}
+	}
+	.apply-area.show-apply{
+		display: block;
+	}
+}

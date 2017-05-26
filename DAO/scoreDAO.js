@@ -161,7 +161,7 @@ module.exports = {
 	},
 
 	getTutorScore : (pro_id,callback)=>{
-		var sql = `select pro_id,tutor_score_info.*,stu_name,stu_num
+		var sql = `select pro_id,pro_name,tutor_score_info.*,stu_name,stu_num
 								from tutor_score_info
 								left join student_info on student_info.project_id=tutor_score_info.project_id
 								left join project_info on pro_id=tutor_score_info.project_id

@@ -57,7 +57,7 @@ module.exports = {
 		// 从学号中获取入学年份
 		var num = user_info.num.substring(0,2);
 		// 学生信息：例 13软件工程xx(学号)
-		var title =num + user_info.major_name + user_info.stu_name + "("+ user_info.num +") 申请您的课题："+pro_info.pro_name;
+		var title =num + user_info.major_name + " "+user_info.username + "("+ user_info.num +")  申请您的课题："+pro_info.pro_name;
 		console.log("title = " +title);
 		var sql = "insert into choose_pro_info(cho_id,stu_id,tutor_id,project_id,title,status) values(null,?,?,?,?,0)";
 		var params = [user_info.id,pro_info.tutor_id,pro_info.pro_id,title];
@@ -354,56 +354,6 @@ module.exports = {
 			}
 			callback(result);
 		});
-	},
-
-
-
-	/**
-	 * 获取学生对导师的评价
-	 *
-	 * @param {[type]}   stu_id   [description]
-	 *
-	 * @return {[type]}   [description]
-	 */
-	showComments : function(stu_id,callback){
-		// var nowYear = (new Date()).getFullYear(),
-		// 		sql = `select tutor_name,work_report,reply_status from reply_score_info,tutor_info
-		// 					where stu_id=? and reply_score_info.tutor_id=tutor_info.tutor_id
-		// 					and publish_time>?`,
-		// 		params = [stu_id,nowYear];
-		// query(sql,params,(error,score_info)=>{
-		// 	if(error){
-		// 		console.log("showComments score "+ error.message);
-		// 		return g_vars.ERROR;
-		// 	}
-		// 	if(score_info[0].score != NULL){
-		// 		sql = `select comments from student_info where stu_id=?`;
-		// 		params = [stu_id];
-		// 		query(sql,params,(error,result)=>{
-		// 			if(error){
-		// 				console.log("showComments comments " + error.message);
-		// 				return g_vars.ERROR;
-		// 			}
-		// 			callback(score_info,comments);
-		// 		})
-		// 	}
-		// 	else{
-		// 		callback(score_info);
-		// 	}
-		// });
-	},
-
-
-	/**
-	 * 上传评价
-	 *
-	 * @param {[type]}   info     [stu_id/comments]
-	 *
-	 */
-	uploadComments : function(info,callback){
-		
-	},
-
-
+	}
 	
 }

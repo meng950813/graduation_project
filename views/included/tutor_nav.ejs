@@ -9,6 +9,13 @@
 			 >
 				<a href="/tutor/publish"><span class="glyphicon"></span>发布课题</a>
 			</li>
+			<li 
+				<% if(nav_active == 3) { %>
+					 class="nav-active"
+				<% } %>
+			 >
+				<a href="/tutor/choose_state"><span class="glyphicon"></span>查看选题申请</a>
+			</li>
 
 			<li
 				<%  if(nav_active == 2) { %>
@@ -30,7 +37,7 @@
 					 class="nav-active"
 				<% } %>
 			>
-				<a href="/score/tutor_socre"><span class="glyphicon"></span>指导教师评分</a>
+				<a href="/score/tutor_score"><span class="glyphicon"></span>指导教师评分</a>
 			</li>
 			<li
 				<%  if(nav_active == 17) { %>

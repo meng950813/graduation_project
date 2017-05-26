@@ -5,7 +5,7 @@ data.id = parseInt(pro_id)||0;
 
 $(".in-detail").addEventListener("click",function(event){
 	var target = event.target;
-	console.log(target);
+	// console.log(target);
 	/* 平时成绩 */
 	if(target.id == "score-usual"){
 		data.type = 0;

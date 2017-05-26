@@ -168,6 +168,53 @@ router.post('/review',(req,res)=>{
 	})
 });
 
+/* 选题情况 */
+router.get("/choose_state",(req,res)=>{
+	publicFun.hasPower(req,res,g_vars.ID_TUTOR);
+	var user = req.session.user;
+	var data = {
+		title 		: "选题申请",
+		username 	: user.username,
+		identity 	: user.identity, 
+		nav_active 	: 3,
+
+		breadcrumbs : "流程管理 >> 选题申请"
+	};
+	tutorDAO.getSelectInfo(user.id,(result)=>{
+		if(result.length == 0)
+			data.no_info = true;
+		else
+			data.no_info = false;
+
+		data.info_list = result;
+
+		res.render("choose_state_page",data);
+	});
+});
+
+
+/* 选题情况 */
+router.post("/deal_choose",(req,res)=>{
+	publicFun.hasPower(req,res,g_vars.ID_TUTOR);
+	var user = req.session.user;
+	var info = req.body;
+	info.tutor_id = user.id;
+	info.result = info.result==g_vars.SUCCESS
+							?g_vars.SUCCESS:g_vars.ERROR;
+
+	tutorDAO.dealSelectProject(info,(result)=>{
+		if(result.affectedRows == 0){
+			res.json({ok:false});
+		}
+		else{
+			res.json({ok:true});
+		}
+	});
+});
+
+
+
+/* 考核卡片列表 */
 router.get("/assess",(req,res)=>{
 	var user = req.session.user;
 	publicFun.hasPower(req,res,g_vars.ID_TUTOR);
@@ -238,5 +285,16 @@ router.post("/upload_assess",(req,res)=>{
 		res.json({ok:true});
 	});
 });
+
+/* 返回未处理的申请，数组 */
+function getNewList(list){
+	var new_list = [];
+	for(var i in list){
+		if(list[i].status == 0){
+			new_list.push(list[i]);
+		}
+	}
+	return new_list;
+}
 
 module.exports = router;

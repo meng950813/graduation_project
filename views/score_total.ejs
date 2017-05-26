@@ -25,6 +25,10 @@
       <label id="send-id" data-id="<%= pro_info.pro_id%>">课题名称:</label> <%= pro_info.pro_name%>
     </p>
     <%if(pro_info.total_score != null){%>
+      <p>
+        <label>总评成绩：</label>
+        <span class="font-36 color-danger"><%= pro_info.total_score.score%></span>
+      </p>
       <h1 id="total-level" class="<%= pro_info.total_score.color%>"><%= pro_info.total_score.level%></h1>
     <%}%>
   </form>
