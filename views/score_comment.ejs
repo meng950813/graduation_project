@@ -1,0 +1,49 @@
+<% layout('template') %>
+
+<div class="in-detail">
+  <form id="score-area">
+    <%if(identity == 0) {%>
+      <p ><label>导师信息:</label>  (<%= tutor_info.tutor_num%>) &nbsp; <%= tutor_info.tutor_name%></p>
+    <%}%>
+    <p>
+      <label id="send-id" data-id="<%= pro_info.pro_id%>">课题名称:</label> <%= pro_info.pro_name%>
+    </p>
+    <% if(pro_info.score_info != null){%>
+      <h1 id="total-level" class="<%= pro_info.score_info.color%>"><%= pro_info.score_info.level%></h1>
+    <%}%>
+  </form>
+
+  <div class="detail-content">
+    <p class="line-height-2">评价导师：</p>
+    <textarea id="comments" style="resize:none" name="comments" <%= identity==1&&("readonly='readonly'")%>>
+      <%= pro_info.comments==null?"":pro_info.comments%>
+    </textarea>
+    <% if(identity == 0) {%>
+      <div class="detail-content">
+        <button id="sub-btn" data-id="<%=pro_info.pro_id%>" class="btn btn-block btn-success">确定提交</button>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<% include ./included/detail_dialog.ejs%>
+
+<% var script = "";
+  if(identity == 0){
+    script = ` 
+
+    var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+
+    var textAreaId = { comments : null};
+
+    var stuUpload = new stuUploadContent(
+      $('#sub-btn'),
+      null,
+      dialog,
+      "/score/upload_comments",
+      textAreaId,
+      $(".in-detail")
+    );`
+  } 
+%>
+<% block('script', script) -%>

@@ -1,0 +1,38 @@
+<% layout('template') %>
+
+<!-- 进度显示区域 -->
+<table class="show-process">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>课题名称</th>
+      <th>课题类型</th>
+      <th>课题性质</th>
+      <th>学生评价</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i in pro_info) {%>
+        <tr>
+          <td><%= (parseInt(i,10)+1)%></td>
+          <td class="pro-name">
+            <%= pro_info[i].pro_name%>
+          </td>
+          <td class="pro-type">
+            <%= pro_info[i].pro_type%>
+          </td>
+          <td>
+            <%= pro_info[i].pro_nature%>
+          </td>
+          <td>
+            <% if(pro_info[i].comments == null){ %>
+              <h3>暂无评价</h3>
+            <% } else{ %>
+              <h3 class="color-success">已填写</h3>
+              <a class="btn btn-block btn-success" href="/tutor/comments_detail?id=<%= pro_info[i].pro_id%>">查看</a>
+            <% } %>
+          </td>
+        </tr>
+      <% } %>
+  </tbody>
+</table>

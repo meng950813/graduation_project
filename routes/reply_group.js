@@ -76,9 +76,13 @@ router.get("/score",(req,res)=>{
 		breadcrumbs : "流程管理 >> 答辩评分"
 	};
 
-
-	scoreDAO.getReplyScore(pro_id,(result)=>{
+	var params ={
+		pro_id   : pro_id,
+		tutor_id : user.id
+	}
+	scoreDAO.getReplyScore(params,(result)=>{
 		data.pro_info = result[0];
+		console.log(data.pro_info);
 		res.render("score_reply",data);
 	});
 });

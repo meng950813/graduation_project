@@ -289,6 +289,7 @@ function stuUploadContent(sub_btn,upload,dialog,url,textAreaId,parentElem,annexU
 	this.parentElem = parentElem;
 	this.annexUpload= annexUpload;
 
+	this.canUpload = false;
 
 	if(this.parentElem != undefined || this.parentElem != null){
 		/* 设置 textarea change 监听事件 */
@@ -310,14 +311,14 @@ stuUploadContent.prototype.listenAreaChange = function(){
   	var target = event.target;
   	if(target.nodeName == "TEXTAREA"){
   		classie.remove(target,"border-danger");
-  		this.upload.setChanged();
+  		this.canUpload = true;
   	}
   }.bind(this), false);
 }
 
 /* 设置 提交按钮点击事件 */
 stuUploadContent.prototype.submitClick = function(){
-	if(this.upload.getChanged() || this.annexUpload.getChanged()){
+	if(this.canUpload ||this.upload.getChanged() || this.annexUpload.getChanged()){
     var data ={};
     if(this.textAreaId != undefined){
     	data = this.getAreaText();
@@ -327,8 +328,9 @@ stuUploadContent.prototype.submitClick = function(){
       var id = Number.parseInt(this.sub_btn.getAttribute("data-id"),10);
       data.id = id > 0?id:null;
 
-      data.file_path = this.upload.getPath();
-
+      if(this.upload != undefined){
+      	data.file_path = this.upload.getPath();
+      }
       if(this.annexUpload != undefined){
       	data.annex_path = this.annexUpload.getPath();
       }
@@ -336,9 +338,11 @@ stuUploadContent.prototype.submitClick = function(){
       AJAX.post(this.url,data,function(result){
         if(result.ok == true){
           this.dialog.showResult(true);
-          this.upload.cleanChange();
+          if(this.upload != undefined)
+          	this.upload.cleanChange();
           if(this.annexUpload != undefined)
           	this.annexUpload.cleanChange();
+          this.canUpload = false;
         }else{
           this.dialog.showResult(false);
         }

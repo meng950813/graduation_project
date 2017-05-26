@@ -96,6 +96,13 @@ module.exports = {
 	},
 
 
+	/* 判断返回结果中是否有数据 */
+	noPro_info : (res,result,data)=>{
+		if(result.length == 0){
+			res.render("no_project",data);
+		}
+	},
+
 	/* 未登录,跳转到登录页 */
 	toLogin : (req,res)=>{
 		// console.log("in toLogin : "+ req.session.user.identity);
@@ -182,6 +189,28 @@ module.exports = {
 		// var paths = file_path.split("/");
 		// 时间戳为13位,+ 2位下划线 ==> 15位
 		return file_path == null ? null : file_path.substr(15);
+	},
+
+	/* 返回总评等级及对应颜色 */
+	getScoreLevel : (score_arr)=>{
+		// 如果还有分数项未上传，返回总评成绩为null
+		if(score_arr.usual_score==null||score_arr.mentor_score==null
+			||score_arr.appraise_score==null||score_arr.reply_score==null)
+			return null;
+		var score = score_arr.usual_score * 0.2+
+								score_arr.mentor_score * 0.2+
+								score_arr.appraise_score * 0.25+
+								score_arr.reply_score * 0.35; 
+		if(score >= 90)
+			return {"score":score,"level":"优","color":"color-success"};
+		else if(score >= 80)
+			return {"score":score,"level":"良","color":"color-primary"};
+		else if(score >= 70)
+			return {"score":score,"level":"中","color":"color-info"};
+		else if(score >= 60)
+			return {"score":score,"level":"及格","color":"color-warning"};
+		else
+			return {"score":score,"level":"不及格","color":"color-danger"};
 	},
 
 	redirectTo : (user_info)=>{

@@ -168,5 +168,75 @@ router.post('/review',(req,res)=>{
 	})
 });
 
+router.get("/assess",(req,res)=>{
+	var user = req.session.user;
+	publicFun.hasPower(req,res,g_vars.ID_TUTOR);
+	var data = {
+				title 		: "考核卡片",
+				username 	: user.username,
+				identity 	: user.identity, 
+				nav_active 	: 9,
+
+				breadcrumbs : "流程管理 >> 考核卡片"
+			};
+	tutorDAO.getAssessList(user.id,(result)=>{
+		if(result.length == 0){
+			result = [];
+		}
+		publicFun.formatProjectType(result);
+		data.pro_info = result;
+		res.render("score_assess_list",data);
+	})
+});
+
+/* 考核卡片填写页面 */
+router.get("/assess_detail",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var pro_id = req.query.id,
+			user = req.session.user;
+
+	if(user.identity == g_vars.ID_STUDENT){
+		pro_id = user.pro_id;
+	}
+	if(pro_id == undefined){
+		res.render("index",data);
+	}
+	var data = {
+				title 		: "考核卡片",
+				username 	: user.username,
+				identity 	: user.identity, 
+				nav_active 	: 9,
+
+				breadcrumbs : "流程管理 >> 考核卡片"
+			};
+
+	tutorDAO.getAssess(pro_id,(result)=>{
+		if(result.length == 0){
+			return;
+		}
+		result = result[0];
+		
+		result.score_info = publicFun.getScoreLevel(result); 
+		result.file_name = publicFun.getFileName(result.annex_path);
+		
+		data.pro_info = result;
+		res.render("score_assess",data);
+	});
+});
+
+router.post("/upload_assess",(req,res)=>{
+	var info = req.body;
+	info.pro_id = info.id;
+	if(req.session.user.identity != g_vars.ID_TUTOR){
+		res.json({ok:false});
+	}
+	tutorDAO.updateAssess(info,(result)=>{
+		if(result.affectedRows == 0){
+			res.json({ok:false});
+		}
+		res.json({ok:true});
+	});
+});
 
 module.exports = router;

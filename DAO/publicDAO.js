@@ -31,7 +31,7 @@ module.exports = {
 		}
 		/*导师登录，返回主键，密码等信息*/
 		else if(identity === g_vars.ID_TUTOR){
-			sql = "select tutor_id,tutor_name,tutor_college,password from tutor_info where tutor_num=?";
+			sql = "select tutor_id,tutor_name,tutor_num,tutor_college,password from tutor_info where tutor_num=?";
 		}
 		/*管理员登录  TODO */
 		else if(identity === g_vars.ID_MANAGER){
@@ -351,7 +351,7 @@ module.exports = {
 		var sql,params=[];
 		if(info.pro_id){
 			sql = `select appraise_group_info.*,tutor_name,tutor_num
-							from appraise_info,appraise_group_info,tutor_info
+							from appraise_info
 							left join appraise_group_info on appraise_group_info.appraise_id = appraise_info.appraise_id
 							left join tutor_info on tutor_info.tutor_id = appraise_group_info.tutor_id
 							where appraise_info.project_id=?`;
@@ -368,7 +368,8 @@ module.exports = {
 				console.log("get appraise group error : "+error.message);
 				return;
 			}
-			if(info.tutor_id){
+			console.log(group_info);
+			if(info.tutor_id && group_info.length > 0){
 				params = [group_info[0].appraise_id];
 				sql = `select stu_name,stu_num,major_name,pro_id,pro_name,pro_type,pro_nature
 							from appraise_info

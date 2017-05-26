@@ -123,7 +123,6 @@ module.exports = {
 	 * @return {[type]}   [返回处理结果]
 	 */
 	dealSelectProject : function(info,callback){
-		// 提交表中的记录设为已读，如果失败，结束操作
 		var sql,params;
 	 	
 	 	// 同意
@@ -328,6 +327,71 @@ module.exports = {
 				return g_vars.ERROR;
 			}
 			callback(result);
+		});
+	},
+
+
+	/**
+	 * 获取考核卡片列表信息
+	 *
+	 * @param {[type]}   tutor_id [description]
+	 */
+	getAssessList : (tutor_id,callback)=>{
+		var sql,nowYear = (new Date()).getFullYear();
+		sql = `select stu_name,stu_num,pro_id,pro_name,pro_type,pro_nature,assessment_info.*
+					from project_info
+					left join student_info on pro_id = student_info.project_id
+					left join assessment_info on pro_id = assessment_info.project_id
+					where publisher=? and publish_time>? and project_info.status=1`;
+		query(sql,[tutor_id,nowYear],(error,result)=>{
+			if(error){
+				console.log("get assess list : "+error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
+
+	/**
+	 * 获取考核卡片详情,成绩等级,学生姓名,课题名称
+	 */
+	getAssess : (pro_id,callback)=>{
+		var sql = `select assessment_info.*,stu_name,stu_num,pro_name,pro_id,score_info.*
+						from project_info
+						left join student_info on student_info.project_id=pro_id
+						left join assessment_info on assessment_info.project_id=pro_id
+						left join score_info on score_info.project_id=pro_id
+						where pro_id = ?`;
+		query(sql,[pro_id],(error,result)=>{
+			if(error){
+				console.log("get assess : "+error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
+
+	/**
+	 * 插入/修改考核卡
+	 *
+	 * @param {[type]}   info     [pro_id,comments,file_path]
+	 *
+	 */
+	updateAssess : (info,callback)=>{
+		var sql = `update assessment_info set assess_comments=?`,
+		 	   params = [info.comments];
+		if(info.file_path != null || info.file_path != undefined){
+		 	sql += ",annex_path=?";
+		 	params.push(info.file_path);
+		}
+		sql += "where project_id=?";
+		params.push(info.pro_id);
+		query(sql,params,(error,result)=>{
+		 	if(error){
+		 		console.log("update assess : "+error.message);
+		 		return;
+		 	}
+		 	callback(result);
 		});
 	}
 }

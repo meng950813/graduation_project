@@ -1,0 +1,124 @@
+<% layout('template') %>
+
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+  <legend class="color-danger">评分标准</legend>
+  <ol class="rules">
+    <li>
+      平时成绩、指导教师评分、评阅教师评分、答辩成绩、总评成绩均按百分制评定。
+    </li>
+    <li>
+      总评成绩 = N1x20% + N2x20% + N3x25% + N4x35%;
+    </li>
+    <li>
+      成绩等级按优、良、中、及格、不及格评定。优：90~100;良：80~90;中：70~79;及格：60~69;不及格：0~59。
+    </li>
+  </ol>
+</fieldset>
+
+<div class="in-detail">
+  <form id="score-area">
+    <p >
+      <label>学生信息:</label>  (<%= pro_info.stu_num%>) &nbsp; <%= pro_info.stu_name%>
+    </p>
+    <p>
+      <label id="send-id" data-id="<%= pro_info.pro_id%>">课题名称:</label> <%= pro_info.pro_name%>
+    </p>
+    <%if(pro_info.total_score != null){%>
+      <h1 id="total-level" class="<%= pro_info.total_score.color%>"><%= pro_info.total_score.level%></h1>
+    <%}%>
+  </form>
+
+  <!-- 平时成绩 -->
+  <div class="score-container">
+    <%if(pro_info.usual_score == null){%>
+    <p class="line-height-2"><label>平时成绩 : 暂无</label></p>
+    <%}else{%>
+    <p class="line-height-2"><label>平时成绩 : <%= pro_info.usual_score%></label>&nbsp;<button class="btn btn-default" id="score-usual"><span class="glyphicon glyphicon-hand-down"></span>详情</button></p>
+    <%}%>
+    <div class="score-detail">
+      <table class="score-detail">
+        <thead>
+          <tr>
+            <th>工作态度和遵守纪律情况(25分)</th>
+            <th>工作能力(50分)</th>
+            <th>开题及中期检查情况(25分)</th>
+          </tr>
+        </thead>
+        <tbody>  
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 指导教师评分 -->
+  <div class="score-container">
+    <%if(pro_info.mentor_score == null){%>
+    <p class="line-height-2"><label>指导教师评分 : 暂无</label></p>
+    <%}else{%>
+    <p class="line-height-2"><label>指导教师评分 :<%= pro_info.mentor_score%></label>&nbsp;<button class="btn btn-default" id="score-tutor"><span class="glyphicon glyphicon-hand-down"></span>详情</button></p>
+    <%}%>
+    <div class="score-detail">
+      <table>
+        <thead>
+          <tr>
+            <th>完成任务情况(25分)</th>
+            <th>基本理论知识掌握情况(25分)</th>
+            <th>文献综述(25分)</th>
+            <th>毕业设计(论文)质量(25分)</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 评阅教师评分 -->
+  <div class="score-container">
+    <%if(pro_info.appraise_score == null){%>
+      <p class="line-height-2"><label>评阅教师评分 : 暂无</label></p>
+    <%}else{%>
+      <p class="line-height-2"><label>评阅教师评分 : <%= pro_info.appraise_score%></label>&nbsp;<button class="btn btn-default" id="score-appraise"><span class="glyphicon glyphicon-hand-down"></span>详情</button></p>
+    <%}%>
+    <div class="score-detail">
+      <table>
+        <thead>
+          <tr>
+            <th>毕设难度及实用价值(20分)</th>
+            <th>任务完成情况(20分)</th>
+            <th>书面质量(20分)</th>
+            <th>实现水平(20分)</th>
+            <th>工作量(20分)</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 答辩成绩 -->
+  <div class="score-container">
+    <% if(pro_info.reply_score == null){%>
+      <p class="line-height-2"><label>答辩成绩 : 暂无</label></p>
+    <% } else{ %>
+       <p class="line-height-2"><label>答辩成绩 : <%= pro_info.reply_score%></label>&nbsp;<button class="btn btn-default" id="score-reply"><span class="glyphicon glyphicon-hand-down"></span>详情</button></p>
+    <% } %>
+    <div class="score-detail-reply">
+      <table class="score-detail">
+        <thead>
+          <tr>
+            <th>工作汇报(40分)</th>
+            <th>答辩情况(60分)</th>
+            <th>评分导师</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table> 
+    </div>
+  </div>
+</div>
+
+<% script("../../javascripts/total_score.js") -%>

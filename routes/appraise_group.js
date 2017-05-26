@@ -46,7 +46,7 @@ router.get("/",(req,res)=>{
 				data.group_info.tutor_name 	= user.username;
 				data.group_info.tutor_num 	= user.num;
 			}
-
+			
 			data.date = publicFun.formatDate(data.group_info.start_time);
 
 			data.stu_info	= stu_info;

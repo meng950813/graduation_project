@@ -1,0 +1,57 @@
+<% layout('template') %>
+
+<!-- 提示性文字 -->
+<fieldset id="promptText" class="promptText">
+    <legend class="color-danger">相关提示</legend>
+    <ol>
+      <% for(var item in prompt_text) {%>
+        <li><%= prompt_text[item]%></li>
+      <% } %>
+    </ol>
+  </fieldset>
+
+<!-- 进度显示区域 -->
+<table class="show-process">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>课题名称</th>
+      <th>课题类型</th>
+      <th>课题性质</th>
+      <th>选题学生</th>
+      <th>总评等级</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i in pro_info) { 
+      if(pro_info[i].stu_name == null){
+        continue;
+      }
+    %>
+        <tr>
+          <td><%= (parseInt(i,10)+1)%></td>
+          <td class="pro-name">
+            <%= pro_info[i].pro_name%>
+          </td>
+          <td class="pro-type">
+            <%= pro_info[i].pro_type%>
+          </td>
+          <td>
+            <%= pro_info[i].pro_nature%>
+          </td>
+          <td>
+            <%= pro_info[i].stu_name%><br/>
+            (<%= pro_info[i].stu_num %>)
+          </td>
+          <td>
+            <% if(pro_info[i].total_score == null){ %>
+              <h3>暂无</h3>
+            <% } else{ %>
+              <h3 class="<%= pro_info[i].total_score.color%>"><%= pro_info[i].total_score.level%></h3>
+              <a href="/score/grades?id=<%=pro_info[i].pro_id%>" class="btn btn-block btn-info">查看详情</a>
+            <% } %>
+          </td>
+        </tr>
+      <% } %>
+  </tbody>
+</table>

@@ -1,0 +1,69 @@
+<% layout('template') %>
+
+<div class="in-detail">
+  <form id="score-area">
+    <p >
+      <label>学生信息:</label>  (<%= pro_info.stu_num%>) &nbsp; <%= pro_info.stu_name%>
+    </p>
+    <p>
+      <label id="send-id" data-id="<%= pro_info.pro_id%>">课题名称:</label> <%= pro_info.pro_name%>
+    </p>
+    <% if(pro_info.score_info != null){%>
+      <h1 id="total-level" class="<%= pro_info.score_info.color%>"><%= pro_info.score_info.level%></h1>
+    <%}%>
+  </form>
+
+  <div class="detail-content">
+    <p class="line-height-2">导师评价：</p>
+    <textarea id="comments" style="resize:none" name="comments" <%= identity==0&&("readonly='readonly'")%>>
+      <%= pro_info.assess_comments==null?"":pro_info.assess_comments%>
+    </textarea>
+    <div class="detail-title line-height-4">
+      <input type="file" name="file" id="file"/>
+      <button id="upload" class="progress-button shrink" data-horizontal="">
+        <span class="content">点击上传</span>
+        <span class="progress">
+          <span class="progress-inner notransition"></span>
+        </span>
+      </button>
+    </div>
+
+    <% if(pro_info.annex_path != null){ %>
+      <p class="detail-title color-info">下载文档 ： 
+        <a class="btn btn-primary"  href="../download?name=<%= pro_info.annex_path%>">
+          <span class="glyphicon glyphicon-download-alt"></span>&nbsp;
+          <%= pro_info.file_name%>
+        </a>
+      </p>
+    <% } %>
+    <% if(identity == 1) {%>
+      <div class="detail-content">
+        <button id="sub-btn" data-id="<%=pro_info.pro_id%>" class="btn btn-block btn-success">确定提交</button>
+      </div>
+    <% } %>
+  </div>
+  
+</div>
+
+<% include ./included/detail_dialog.ejs%>
+
+<% var script = "";
+  if(identity == 1){
+    script = ` 
+    var upload_task = new upload_file($('#file'),$('#upload'),$('#upload .progress-inner'));
+
+    var dialog = new show_result_dialog($("#animateDialog"),$("#animateDialog .close-btn"));
+
+    var textAreaId = { comments : null};
+
+    var stuUpload = new stuUploadContent(
+      $('#sub-btn'),
+      upload_task,
+      dialog,
+      "/tutor/upload_assess",
+      textAreaId,
+      $(".in-detail")
+    );`
+  } 
+%>
+<% block('script', script) -%>

@@ -16,24 +16,14 @@ module.exports = {
 	 */
 	updateReplyScore : function(info,callback){
 		var sql,params;
-		sql = `update reply_score_info set work_report=?,	reply_status=?
-						where project_id=? and tutor_id=?`;
-		params = [info.work_report,info.reply_score,info.pro_id,info.tutor_id];
+		sql = `call setReplyScore(?,?,?,?)`;
+		params = [info.pro_id,info.tutor_id,info.work_report,info.reply_score];
 		query(sql,params,(error,result)=>{
 			if(error){
 				console.log("update reply_score : "+error.message);
 				return;
 			}
-			var reply_score = info.work_report+info.reply_score;
-			sql = 'call setTotalScore(?,?,?,?,?)';
-			params = [pro_id,0,0,0,reply_score];
-			query(sql,params,(err,back)=>{
-				if(err){
-					console.log("set total score err : "+err.message);
-					return;
-				}
-				callback(result);
-			});
+			callback(result);
 		});
 	},
 
@@ -78,7 +68,7 @@ module.exports = {
 			}
 			var appraise = info.paper_level+info.completion+info.quality+info.design+info.workload;
 			sql = `call setTotalScore(?,?,?,?)`;
-			params = [pro_id,0,0,appraise,,0];
+			params = [pro_id,null,null,appraise,,null];
 			query(sql,params,(err,back)=>{
 				if(err){
 					console.log("set total score : "+err.message);
@@ -96,7 +86,7 @@ module.exports = {
 	 * @param {[type]}   pro_id   [description]
 	 */
 	getAppraiseScore : (pro_id , callback)=>{
-		var sql = `select appraise_info.*,pro_id,stu_name,stu_num,pro_name
+		var sql = `select appraise_info.*,pro_id,pro_name,stu_name,stu_num
 								from appraise_info
 								left join student_info on student_info.project_id=appraise_info.project_id
 								left join project_info on pro_id=appraise_info.project_id
@@ -136,8 +126,8 @@ module.exports = {
 	 * @param {[type]} pro_id [description]
 	 *
 	 */
-	getUsualGrades : (pro_id)=>{
-		var sql = `select pro_id,usual_grades_info.*,stu_name,stu_num
+	getUsualGrades : (pro_id,callback)=>{
+		var sql = `select pro_id,pro_name,usual_grades_info.*,stu_name,stu_num
 								from usual_grades_info
 								left join student_info on student_info.project_id=usual_grades_info.project_id
 								left join project_info on pro_id=usual_grades_info.project_id
@@ -192,8 +182,19 @@ module.exports = {
 	 * @param {[type]}   pro_id   [description]
 	 *
 	 */
-	GetTotalScore : (pro_id,callback)=>{
-
+	getTotalScore : (pro_id,callback)=>{
+		var sql = `select score_info.*,pro_id,pro_name,stu_name,stu_num
+							 from score_info 
+							 left join project_info on score_info.project_id=pro_id
+							 left join student_info on student_info.project_id=score_info.project_id
+							 where score_info.project_id=?`;
+		query(sql,[pro_id],(error,result)=>{
+			if(error){
+				console.log("get total score : "+error.message);
+				return;
+			}
+			callback(result);
+		});
 	},
 
 
@@ -209,13 +210,39 @@ module.exports = {
 		nowYear = (new Date()).getFullYear();
 		sql = `select stu_name,stu_num,pro_id,pro_name,pro_type,pro_nature
 					from project_info
-					left join student_info on pro_id = project_id
-					where publisher=? and publish_time>?`;
+					left join student_info on pro_id = student_info.project_id
+					where publisher=? and publish_time>? and project_info.status=1`;
 		params = [tutor_id,nowYear];
 
 		query(sql,params,(error,result)=>{
 			if(error){
 				console.log("getList : "+error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
+
+
+	/**
+	 * 获取 学生总评成绩列表
+	 * 课题信息、学生信息 以及 总评等级
+	 * 返回课题名，pro_id，类型，性质; 学生名，学号
+	 * 返回结果按 pro_id 升序排列
+	 */
+	getTotalList : (tutor_id,callback)=>{
+		var sql ,params,nowYear;
+		nowYear = (new Date()).getFullYear();
+		sql = `select stu_name,stu_num,pro_id,pro_name,pro_type,pro_nature,score_info.*
+					from project_info
+					left join student_info on pro_id = student_info.project_id
+					left join score_info on pro_id = score_info.project_id
+					where publisher=? and publish_time>? and project_info.status=1`;
+		params = [tutor_id,nowYear];
+
+		query(sql,params,(error,result)=>{
+			if(error){
+				console.log("get Total List : "+error.message);
 				return;
 			}
 			callback(result);
@@ -231,20 +258,31 @@ module.exports = {
 	 * 
 	 */
 	getScoreDetail : (pro_id,type,callback)=>{
-		var table_name ;
-		if(type == 0){
-			table_name = "usual_grades_info";
-		}else if(type == 1){
-			table_name = "tutor_score_info";
-		}else if(type == 2){
-			table_name = "appraise_info";
-		}else{
-			table_name = "reply_score_info";
+		var sql;
+		/* 答辩分数 */
+		if(type == 3){
+			sql = `select work_report as part1,reply_status as part2,tutor_name as part3 
+						from reply_score_info,tutor_info
+						where reply_score_info.tutor_id=tutor_info.tutor_id and project_id=?`;
 		}
-		var sql = `select * from ${table_name} where project_id=?`;
+		/* 导师评分 */
+		else if(type == 1){
+			sql = `select completion as part1,basic_status as part2,application as part3,paper_quality as part4
+						 from tutor_score_info where project_id =?`;
+		}
+		/* 评审成绩 */
+		else if(type == 2){
+			sql = `select paper_level as part1,completion as part2,quality as part3,design as part4,workload as part5
+						 from appraise_info where project_id =?`;
+		}
+		/* 平时成绩 */
+		else{
+			sql = `select attitude as part1,ablity as part2,checking as part3
+						from usual_grades_info where project_id =?`;
+		}
 		query(sql,[pro_id],(error,result)=>{
 			if(error){
-				console.log("get "+table_name+" detail : "+error.message);
+				console.log("get score detail : "+error.message);
 				return;
 			}
 			callback(result);
@@ -275,6 +313,51 @@ module.exports = {
 		query(sql,[tutor_id],(error,result)=>{
 			if(error){
 				console.log("get score list : "+ error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
+
+
+	/**
+	 * 获取学生评价列表
+	 *
+	 * @param {[type]}   tutor_id [description]
+	 */
+	getCommentsList:(tutor_id,callback)=>{
+		var sql ,params,nowYear;
+		nowYear = (new Date()).getFullYear();
+		sql = `select *	from project_info 
+					where publisher=? and publish_time>? and status=1`;
+		params = [tutor_id,nowYear];
+
+		query(sql,params,(error,result)=>{
+			if(error){
+				console.log("get comments List : "+error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
+
+	getComment : (pro_id,callback)=>{
+		var sql = `select * from project_info where pro_id=?`;
+		query(sql,[pro_id],(error,result)=>{
+			if(error){
+				console.log("get comments : "+error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
+
+	/* 更新学生对教师的评价 */
+	updateComment : (info,callback)=>{
+		var sql = `update project_info set comments=? where pro_id=?`;
+		query(sql,[info.comments,info.pro_id],(error,result)=>{
+			if(error){
+				console.log("update comment : " +error.message);
 				return;
 			}
 			callback(result);
