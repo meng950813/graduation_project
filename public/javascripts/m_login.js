@@ -1,5 +1,4 @@
 $("#submitBtn").onclick = function(event){
-	// console.log("submit");
 	var data = {};
 	data.usernum = $('#usernum').value;
 	data.pwd = $('#pwd').value;
@@ -12,13 +11,9 @@ $("#submitBtn").onclick = function(event){
 	// 	showError($("#pwdError"));
 	// 	return;
 	// }
-
-	radio = $("input[name='identity']");
-
-	// 选中第一个表示学生身份登陆，否则导师
-	data.identity = radio[0].checked?0:1;
-
-	var url = "/login";
+	// 
+	var url = "./dologin";
+	console.log(data);
 	AJAX.post(url,data,function(result){
 
 		// result = JSON.parse(result);

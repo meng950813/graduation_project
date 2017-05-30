@@ -1,0 +1,26 @@
+<% layout('template') %>
+<div id="choose-state">
+  <div id="new-apply" class="show-apply apply-area">
+    <%if(no_info == true){%>
+      <h3>暂无私信</h3>
+    <%}else{%>
+      <%for(var i in info_list){%>
+        <div class="line <%= info_list[i].status==0?'not-read':''%> ">
+          <%= info_list[i].title%>
+          <div class="options">
+            <a class="btn btn-primary" href="m_detail?id=<%= info_list[i].con_id%>&s=<%=isSend%>">详情</a>
+            <% if(isSend == 0) { %>
+              <a class="btn btn-info" href="/w_message?id=<%= info_list[i].con_id%>">回复</a>
+            <% } else { %>
+              <button class="btn btn-danger del" data-id=<%= info_list[i].con_id%>>删除</button>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    <% } %>
+  </div>
+</div>
+<%if(isSend == 1){ %>
+  <% include ./included/detail_dialog.ejs%>
+  <% script("../javascripts/message_list.js") -%>
+<% } %>

@@ -1,0 +1,24 @@
+<% layout('template') %>
+
+
+<div id="modify" class="in-detail">
+  <div class="line">
+    <label>原密码：</label>
+    <input type="password" name="pwd" id="pwd"><span>密码错误</span>
+  </div>
+  <div class="line">
+    <label>新密码：</label>
+    <input type="password" name="pwd" id="new-pwd">
+  </div>
+  <div class="line">
+    <label>确认密码：</label>
+    <input type="password" name="pwd" id="new-pwd-2"><span>两次密码不同</span>
+  </div>
+  <div class="line">
+    <input type="button" id="sub_btn" class="btn btn-block btn-success" value="提交">
+  </div>
+</div>
+
+<%include ./included/detail_dialog.ejs%>
+
+<% script ("../javascripts/modify_pwd.js") -%>  

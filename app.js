@@ -56,7 +56,7 @@ app.use('/appraise', require('./routes/appraise_group'));
 app.use('/score', require('./routes/score'));
 // app.use('/upload', require('./routes/upload'));
 app.use('/tutor', require('./routes/tutor'));
-// app.use('/admin', require('./routes/admin'));
+app.use('/master', require('./routes/master'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

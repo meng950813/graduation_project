@@ -1,0 +1,40 @@
+<% layout('template') %>
+
+<div class="in-detail">
+  <div class="detail-content">
+    <% if(isReply) { %>
+      <div class="line">
+        <label>收信人：</label>
+        <input type="text" id="receiver" data-id="<%= info.sender_id%>" value='<%= info.uname %>' readonly='readonly'>
+      </div> 
+      <div class="line">
+        <label>标 题：</label>
+        <input type="text" id="m_title" value="回复：<%= info.title%>">
+      </div>
+    <% } else { %>
+      <div class="line">
+        <label>收信人：</label>
+        <input type="text" id="receiver">
+        <div class="search-user" id="s-receiver">
+          <p data-id="1">xxx</p>
+        </div>
+      </div> 
+      <div class="line">
+        <label>标 题：</label>
+        <input type="text" id="m_title">
+      </div>
+    <% } %>
+    <div class="line">
+      <label>内 容：</label>
+      <textarea name="content" id="content" style="resize:none;"></textarea>
+    </div>
+    <div class="line">
+      <button id='sub-btn' class="btn btn-block btn-success">
+        发送
+      </button>
+    </div>
+  </div>
+</div>
+
+<% include ./included/detail_dialog.ejs%>
+<% script("../javascripts/send_message.js") -%>

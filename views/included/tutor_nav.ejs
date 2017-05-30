@@ -92,31 +92,38 @@
 					 class="nav-active"
 				<% } %>
 			>
-				<a href="javascript:void(0);"><span class="glyphicon"></span>修改密码</a>
+				<a href="/password"><span class="glyphicon"></span>修改密码</a>
 			</li>
 			<li
 				<%  if(nav_active == 32) { %>
 					 class="nav-active"
 				<% } %>
 			>
-				<a href="javascript:void(0);"><span class="glyphicon"></span>个人信息</a>
+				<a href="/link"><span class="glyphicon"></span>个人信息</a>
 			</li>
 		</ul>
 		<ul class="nav-tip">
 			<h3>交流互动</h3>
 			<li
+				<%  if(nav_active == 40) { %>
+					 class="nav-active"
+				<% } %>
+			>
+				<a href="/w_message"><span class="glyphicon"></span>写信</a>
+			</li>
+			<li
 				<%  if(nav_active == 41) { %>
 					 class="nav-active"
 				<% } %>
 			>
-				<a href="javascript:void(0);"><span class="glyphicon"></span>收件箱</a>
+				<a href="/message"><span class="glyphicon"></span>收件箱</a>
 			</li>
 			<li
 				<%  if(nav_active == 42) { %>
 					 class="nav-active"
 				<% } %>
 			>
-				<a href="javascript:void(0);"><span class="glyphicon"></span>发件箱</a>
+				<a href="/s_message"><span class="glyphicon"></span>发件箱</a>
 			</li>
 		</ul>
 	</nav>

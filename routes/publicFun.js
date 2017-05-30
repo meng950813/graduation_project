@@ -25,6 +25,14 @@ module.exports = {
 					+fullZero(date.getMinutes());
 	},
 
+	/* 将标题中后台添加的部分截取掉 */
+	formatTitle : (data)=>{
+		for(var i in data){
+			// console.log(data[i]);
+			var index = data[i].title.indexOf(":");
+			data[i].title = data[i].title.substr(index+1);
+		}
+	},
 
 	/**
 	 * 加密模块

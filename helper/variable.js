@@ -8,7 +8,7 @@ var variable = function(){
 	// 用户身份
 	this.ID_STUDENT	= 0;
 	this.ID_TUTOR		= 1;
-	this.ID_MANAGER = 2;
+	this.ID_MASTER  = 2;
 
 	
 	// 审核/处理情况

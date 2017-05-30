@@ -3,7 +3,10 @@
 		<a href="javascript:void(0);">
 			<span class="glyphicon  glyphicon-user color-success"><%= username%></span>
 			&nbsp;
-			<% if(identity == 1){ %>
+			
+			<% if(identity == 2){ %>
+				(<span>管理员</span>)
+			<%}else if(identity == 1){ %>
 				(<span>导师</span>)
 			<% }else{ %>
 				(<span>学生</span>) 

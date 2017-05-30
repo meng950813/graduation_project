@@ -77,6 +77,7 @@ window.$logger = HTMLElement.prototype.$logger = function(log){
 }
 
 
+/* 封装ajax */
 window.AJAX = HTMLElement.prototype.AJAX  = {
 
 	post : function(url,data,callback){
@@ -86,15 +87,9 @@ window.AJAX = HTMLElement.prototype.AJAX  = {
 	  xhr.onreadystatechange = function () {
 			// readyState==4 : 请求已完成;  304未修改
       if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
-       	console.log(xhr.responseText.length);
-       	console.log(xhr.responseText);
-       	console.log(typeof(xhr.responseText));
-       	if(xhr.responseText.length !== 0)
-        	callback(JSON.parse(xhr.responseText));
+        callback(JSON.parse(xhr.responseText));
     	}
     };
-    // console.log(JSON.stringify(data));
-    // xhr.send(data);
     xhr.send(JSON.stringify(data));
 	},
 
@@ -103,7 +98,6 @@ window.AJAX = HTMLElement.prototype.AJAX  = {
 		xhr.open('GET',url,true);
 		xhr.onreadystatechange=function(){
 			if (xhr.readyState == 4 && xhr.status == 200 || xhr.status == 304) { 
-					if(xhr.responseText.length !== 0)
 				callback(JSON.parse(xhr.responseText));  //从服务器获得数据
 			}
 		};

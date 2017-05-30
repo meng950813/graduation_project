@@ -1,0 +1,28 @@
+<% layout('template') %>
+
+<div class="in-detail">
+  <div class="detail-content">
+    <div class="line">
+      <label>发信人：</label>
+      <input type="text" readonly="readonly" value="<%= info.uname%>">
+    </div> 
+    <div class="line">
+      <label>标 题：</label>
+      <input type="text" readonly="readonly" value="<%= info.title%>">
+    </div>
+    <div class="line">
+      <label>内 容：</label>
+      <textarea name="content" id="content" style="resize:none;" readonly="readonly"><%= info.content%></textarea>
+    </div>
+    <div class="line">
+      <label>发布时间：</label>
+      <%= info.publish_time%>
+    </div>
+    
+  </div>
+  <div class="line">
+    <a href="/w_message?id=<%= info.con_id%>&s=<%=isSend%>" class="btn btn-block btn-success">
+      回复
+    </a>
+  </div>
+</div>

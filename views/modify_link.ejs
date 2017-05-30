@@ -1,0 +1,32 @@
+<% layout('template') %>
+
+
+<div id="modify" class="in-detail">
+  <%if(isMe == true) { %>
+    <div class="line">
+      <label>手机号码：</label>
+      <input type="phone" name="phone" id="phone" value="<%= info.phone==null?"":info.phone%>" >
+      <span>格式错误</span>
+    </div>
+    <div class="line">
+      <label>联系邮箱：</label>
+      <input type="mail" name="mail" id="mail" value="<%= info.mail==null?"":info.mail%>">
+      <span>格式错误</span>
+    </div>
+    <div class="line">
+      <input type="button" id="sub_btn" class="btn btn-block btn-success" value="提交">
+    </div>
+  <%include ./included/detail_dialog.ejs%>
+
+  <% script ("../javascripts/modify_link.js") -%>  
+  <%} else {%>
+    <div class="line">
+      <label>手机号码：</label>
+      <input type="phone" name="phone" id="phone" value="<%= info.phone==null?"":info.phone%>" readonly="readonly">
+    </div>
+    <div class="line">
+      <label>联系邮箱：</label>
+      <input type="mail" name="mail" id="mail" value="<%= info.mail==null?"":info.mail%>" readonly="readonly">
+    </div>
+  <%}%>
+</div>

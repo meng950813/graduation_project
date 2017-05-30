@@ -6,7 +6,7 @@ var query = require("../helper/createMysqlPool");
 var g_vars = require("../helper/variable");
 
 /* 获取当前时间戳 */
-getTime = ()=>{
+var getTime = ()=>{
 		var now = new Date();
 		return now.getFullYear()
 					+ "-" + (now.getMonth()+1)

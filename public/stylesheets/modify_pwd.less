@@ -1,0 +1,32 @@
+#modify{
+	padding: 20px;
+	.line{
+		line-height: 2.4;
+		padding: 5px 10px;
+		font-size: 16px; 
+		label{
+			display: inline-block;
+			min-width: 80px;
+		}
+		input{
+			width: 300px;
+			line-height: 2;
+		}
+		input[readonly='readonly']{
+			background: #eee;
+		}
+		span{
+			display: none;
+			padding: 0 0 0 10px;
+			color:@color-danger;
+		}
+	}
+	.showError{
+		span{
+			display: inline-block!important;
+		}
+		input{
+			border: 2px solid @color-danger;
+		}
+	}
+}

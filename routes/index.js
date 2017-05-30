@@ -13,7 +13,7 @@ var publicFun = require("./publicFun");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	publicFun.hasLogin(req,res);
+	publicFun.toLogin(req,res);
   res.render('login');
 });
 
@@ -51,14 +51,14 @@ router.post("/login",function(req, res, next){
 	
 		/* 返回结果为空 ==> 账号不正确，未查到数据 */
 		if(result.length === 0){
-			res.json ({userError:true});
+			res.json({userError:true});
 			return;
 		}
 		result = result[0];
 		// 查找到信息
 		// 密码不正确
 		if(result.password != pwd){
-			res.json ({pwdError:true});
+			res.json({pwdError:true});
 			// returnData.pwdError = true;
 			return;
 		}
@@ -145,13 +145,331 @@ router.post("/upload",upload.single('upload_file'),(req,res)=>{
 
 /* 下载文件，get传值，传入文件路径 */
 router.get("/download",(req,res)=>{
-	console.log("this is download ");
+	// console.log("this is download ");
 	publicFun.toLogin(req,res);
 
   var path = "upload_files/"+req.query.name;
-  console.log(path);
+  // console.log(path);
   var file_name = publicFun.getFileName(req.query.name);
   res.download(path,file_name);
+});
+
+
+/* 修改密码 */
+router.get("/password",(req,res)=>{
+	publicFun.toLogin(req,res);
+	
+	var user = req.session.user;
+	var data = {
+		title : "修改密码",
+		username: user.username,
+		identity: user.identity,
+		nav_active: 31,
+
+		breadcrumbs: "账号管理 >> 修改密码"
+	};
+	res.render("modify_pwd",data);
+});
+
+router.post("/modify_pwd",(req,res)=>{
+	publicFun.toLogin(req,res);
+	var info = req.body,
+			user = req.session.user;
+	
+	// console.log(info);
+
+	publicDAO.getPwd(user.id,user.identity,(result)=>{
+		if(result.length == 0){
+			res.json({ok:false,type:0});
+			return;
+		}
+		var pwd = publicFun.encrypt(info.pwd);
+		if(pwd != result[0].password){
+			res.json({ok:false,type:1});
+			return;
+		}
+		else{
+			var new_pwd = publicFun.encrypt(info.new_pwd);
+			publicDAO.changePwd(user.id,user.identity,new_pwd,(result)=>{
+				// console.log(result);
+				if(result.affectedRows == 0){
+					res.json({ok:false,type:2});
+					return;
+				}
+				res.json({ok:true});
+			});
+		}
+	});
+});
+
+
+/* 获取联系方式 */
+router.get("/link",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var user = req.session.user;
+		var data = {
+		title : "个人信息",
+		username: user.username,
+		identity: user.identity,
+		nav_active: 32,
+		/* 标志是否是自己 ==> 学生能查看导师信息 */
+		isMe : true,
+
+		breadcrumbs: "账号管理 >> 个人信息"
+	};
+	publicDAO.getLink(user.id,user.identity,(result)=>{
+		if(result.length == 0){
+			res.redirect("/index");
+			return;
+		}
+		data.info = result[0];
+		res.render("modify_link",data);
+	});
+});
+
+/* 获取导师联系方式 */
+router.get("/link_teacher",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var user = req.session.user;
+	var data = {
+		title : "导师信息",
+		username: user.username,
+		identity: user.identity,
+		nav_active: 33,
+		/* 标志是否是自己 ==> 学生能查看导师信息 */
+		isMe : false,
+
+		breadcrumbs: "账号管理 >> 导师信息"
+	};
+	if(user.tutor_id == undefined || user.tutor_id == null){
+		res.render("no_data",data);
+		return;
+	}
+
+	publicDAO.getLink(user.tutor_id,g_vars.ID_TUTOR,(result)=>{
+		if(result.length == 0){
+			res.redirect("/index");
+			return;
+		}
+		data.info = result[0];
+		res.render("modify_link",data);
+	});
+});
+
+router.post("/modify_link",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var info = req.body,
+			user = req.session.user;
+	(info.phone=="")&&(info.phone = undefined);
+	(info.mail=="")&&(info.mail = undefined);
+	info.id = user.id;
+	info.identity = user.identity;
+	
+	publicDAO.changeLink(info,(result)=>{
+		if(result.affectedRows == 0){
+			res.json({ok:false});
+			return;
+		}
+		res.json({ok:true});
+	});
+});
+
+
+/* 私信：获取所有收信箱中的私信 */
+router.get("/message",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var user = req.session.user;
+	var info = {};
+
+	// 表示获取收信箱内容
+	info.send = 0;
+	/* g_vars.ID_STUDENT->0,学生to导师； g_vars.ID_TUTOR->1,导师to学生 */
+	info.type = (user.identity^g_vars.ID_TUTOR);
+
+	info.id = user.id;
+
+	var data = {
+		title : "收件箱",
+		username: user.username,
+		identity: user.identity,
+		nav_active: 41,
+		// 表示在收信箱中
+		isSend:0,
+
+		breadcrumbs: "交流互动 >> 收件箱"
+	};
+
+	publicDAO.getMessage(info,(result)=>{
+		if(result.length == 0){
+			data.no_info = true;
+		}else{
+			data.no_info = false;
+			data.info_list = result;
+		}
+		res.render("message_list",data);
+	});
+});
+
+/* 私信：获取所有发信箱中的私信 */
+router.get("/s_message",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var user = req.session.user;
+	var info = {};
+
+	// 表示获取发信箱内容
+	info.send = 1;
+	/* g_vars.ID_STUDENT->0,学生to导师； g_vars.ID_TUTOR->1,导师to学生 */
+	info.type = user.identity;
+
+	info.id = user.id;
+
+	var data = {
+		title : "发件箱",
+		username: user.username,
+		identity: user.identity,
+		nav_active: 42,
+		// 表示在发信箱中
+		isSend:1,
+
+		breadcrumbs: "交流互动 >> 发件箱"
+	};
+
+	publicDAO.getMessage(info,(result)=>{
+		if(result.length == 0){
+			data.no_info = true;
+		}else{
+			data.no_info = false;
+			data.info_list = result;
+		}
+		publicFun.formatTitle(data.info_list);
+		res.render("message_list",data);
+	});
+});
+
+/* 私信详情 */
+router.get("/m_detail",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var id = req.query.id,
+			is_send = req.query.s,
+			user = req.session.user;
+	if(id == undefined || isNaN(id) || id < 1){
+		res.redirect("/index");
+		return;
+	}
+	if(is_send == undefined || isNaN(is_send) || (is_send != 0&&is_send!=1)){
+		res.redirect("/index");
+		return;
+	}
+	(is_send != 0)&&(is_send = 1);
+
+	var mytitle = is_send==0?"收件箱":"发信箱";
+
+	var data = {
+		title : mytitle,
+		username: user.username,
+		identity: user.identity,
+		nav_active: 41,
+		isSend: is_send,
+
+		breadcrumbs: "交流互动 >>"+mytitle
+	};
+	// 参数 0 表示 在收信箱中
+	publicDAO.getOneMessage(id,0,(result)=>{
+		if(result.length == 0){
+			res.redirect("/index");
+			return;
+		}
+		result = result[0][0];
+		result.publish_time = publicFun.formatDate(result.publish_time);
+		data.info = result;
+
+		res.render("message_detail",data);
+	});
+});
+
+/* 写信 */
+router.get("/w_message",(req,res)=>{
+	publicFun.toLogin(req,res);
+	var id = req.query.id,
+			user = req.session.user;
+
+	var data = {
+		title : "写信",
+		username: user.username,
+		identity: user.identity,
+		nav_active: 40,
+		
+		isReply : false,
+
+		breadcrumbs: "交流互动 >> 写信"
+	};
+
+	/* 回复某私信 */
+	if(!isNaN(id) && id > 0){
+		publicDAO.getOneMessage(id,0,(result)=>{
+			if(result[0].length != 0){
+				data.isReply = true;
+				data.info = result[0][0];
+			}
+			res.render("message_send",data);
+		});
+	}else{
+		res.render("message_send",data);
+	}
+});
+
+/* 发私信 */
+router.post("/send_message",(req,res)=>{
+	var user = req.session.user,
+			info = req.body;
+	info.username=user.username;
+	info.num=user.num;
+	info.sender_id = user.id;
+	info.identity=user.identity;
+
+	if(user.identity == g_vars.ID_STUDENT){
+		info.major_name = user.major_name;
+	}
+	// console.log(info);
+	publicDAO.sendMessage(info,user.identity,(result)=>{
+		if(result.affectedRows == 0){
+			res.json({ok:false});
+		}else{
+			res.json({ok:true});
+		}
+	});
+});
+
+
+/* 获取用户信息 */
+router.get("/get_user_info",(req,res)=>{
+	publicFun.toLogin(req,res);
+
+	var identity = req.session.user.identity,
+			key = req.query.key;
+
+	publicDAO.getUserInfo(key,identity,(result)=>{
+		res.json(result);
+	});
+});
+
+/* 删除私信 */
+router.post("/del_message",(req,res)=>{
+	publicFun.toLogin(req,res);
+	var info = req.body;
+	publicDAO.deleteMessage(info.id,(result)=>{
+		if(result.affectedRows > 0){
+			res.json({ok:true});
+		}else{
+			res.json({ok:false});
+		}
+	});
 });
 
 // 获取当前时间戳

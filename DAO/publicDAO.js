@@ -33,9 +33,14 @@ module.exports = {
 		else if(identity === g_vars.ID_TUTOR){
 			sql = "select tutor_id,tutor_name,tutor_num,tutor_college,password from tutor_info where tutor_num=?";
 		}
-		/*管理员登录  TODO */
-		else if(identity === g_vars.ID_MANAGER){
-			sql = "select man_id,man_name,password from manager_info where man_num=?"
+		/*管理员登录 */
+		else if(identity === g_vars.ID_MASTER){
+			sql = `select manager_info.*,tutor_name,tutor_college as college
+						from manager_info,tutor_info 
+						where man_num=? and man_num=tutor_num`;
+/*			sql = `select manager_info.*,tutor_name 
+						from manager_info,tutor_info
+						where man_num=? and manager_info.tutor_id=tutor_info.tutor_id`;*/
 		}
 		query(sql,[num],function(error,result){
 			if(error){
@@ -47,6 +52,41 @@ module.exports = {
 
 			callback(result);
 		})
+	},
+
+
+	/**
+	 * 获取密码
+	 *
+	 * @param {[type]}   id       [description]
+	 * @param {[type]}   identity [description]
+	 */
+	getPwd : function(id,identity,callback){
+		var sql;
+		// 学生密码
+		if(identity === g_vars.ID_STUDENT){
+			sql = "select password from student_info where stu_id=?";
+		}
+		// 导师修改密码
+		else if(identity === g_vars.ID_TUTOR){
+			sql = "select password from tutor_info where tutor_id=?";
+		}
+		// 管理员修改密码
+		else if(identity === g_vars.ID_MASTER){
+			sql = "select password from manager_info where man_id=?";
+		}
+		// 身份错误
+		else{
+			console.log("getPwd : identity error");
+			return g_vars.ERROR;
+		}
+		query(sql,[id],function(error,result){
+			if(error){
+				console.log("getPwd : "+error.message);
+				return g_vars.ERROR;
+			}
+			callback(result);
+		});
 	},
 
 
@@ -70,7 +110,7 @@ module.exports = {
 			sql = "update tutor_info set password=? where tutor_id=?";
 		}
 		// 管理员修改密码
-		else if(identity === g_vars.ID_MANAGER){
+		else if(identity === g_vars.ID_MASTER){
 			sql = "update manager_info set password=? where man_id=?";
 		}
 		// 身份错误
@@ -87,41 +127,63 @@ module.exports = {
 		});
 	},
 
-	/**
-	 * 修改联系方式
-	 *
-	 * @param   id       [学生/导师/管理员id]
-	 * @param   identity [身份：学生/导师/管理员]
-	 * @param   phone    [手机号]
-	 * @param   mail    [邮箱]
-	 * 
-	 * @return {[type]}   [返回修改结果]
-	 */
-	setContactInfo : function(id,identity,phone,mail,callback){
-		var sql;
 
-		// 学生修改联系方式
-		if(identity === g_vars.ID_STUDENT){
-			sql = "update student_info set stu_phone=?,stu_mail=? where stu_id=?";
+	getLink : (id,identity,callback)=>{
+		var sql;
+		if(identity == g_vars.ID_STUDENT){
+			sql = `select phone,mail from student_info where stu_id=?`;
+		}else if(identity == g_vars.ID_TUTOR){
+			sql = `select phone,mail from tutor_info where tutor_id = ?`;
 		}
-		// 导师修改联系方式
-		else if(identity === g_vars.ID_TUTOR){
-			sql = "update tutor_info set tutor_phone?,tutor_mail? where tutor_id=?";
-		}
-		// 身份错误
 		else{
-			console.log("changePwd : identity error");
+			console.log("getPwd : identity error");
 			return g_vars.ERROR;
 		}
-
-		query(sql,[phone,mail,id],function(error,result){
+		query(sql,[id],(error,result)=>{
 			if(error){
-				console.log("setContactInfo : "+error.message);
-				return g_vars.ERROR;
+				console.log("get link error : "+error.message);
+				result = [];
 			}
 			callback(result);
 		});
 	},
+
+	/* 修改联系方式
+		id,identity,phone,mail
+	*/
+	changeLink : (info,callback)=>{
+		var sql ,params = [],str = '';
+		if(info.phone != undefined || info.phone != null){
+			str += " phone=? ";
+			params.push(info.phone);
+		}
+		if(info.mail != undefined || info.mail != null){
+			if(str !== ""){
+				str += ","
+			}
+			str += " mail=? ";
+			params.push(info.mail);
+		}
+		if(info.identity == g_vars.ID_STUDENT){
+			sql = "update student_info set "+str+" where stu_id=?";
+		}
+		else if(info.identity == g_vars.ID_TUTOR){
+			sql = "update tutor_info set "+str+" where tutor_id=?";
+		}else{
+			console.log("get link : identity error");
+			return g_vars.ERROR;
+		}
+		params.push(info.id);
+		
+		query(sql,params,(error,result)=>{
+			if(error){
+				console.log("change link error : "+error.message);
+				result = [];
+			}
+			callback(result);
+		});
+	},
+
 
 	/**
 	 * 发送私信
@@ -134,44 +196,40 @@ module.exports = {
 	sendMessage : function(info,type,callback){
 		if(type === g_vars.ID_STUDENT){
 			// 效果： 来自13软件工程xxx : 私信标题
-			info.title = "来自："+(info.stu_num.substring(2))+info.major_name+info.stu_name + " : " + info.title;
+			info.title = "来自 "+(info.num.substring(2))+info.major_name+info.username + " : " + info.title;
 		}
 		else if(type === g_vars.ID_TUTOR){
 			// 效果：来自导师xxx : 私信标题
-			info.title = "来自导师 "+info.tutor_name +" : "+info.title;
+			info.title = "来自导师 "+info.username +" : "+info.title;
 		}
 		else{
 			console.log("sendMessage : type error");
 			return g_vars.ERROR;
 		}
 
-		var sql = "insert into contact_info(con_id,sender_id,receiver_id,title,content,type,publish_time,status) values(null,?,?,?,?,?,null,0)";
-		var params = [info.sender_id,info.receiver_id,info.title,info.content,type];
+		var sql = `insert into contact_info(con_id,sender_id,receiver_id,title,content,type,status) 
+							values(null,?,?,?,?,?,0)`;
+		console.log(info,info.id);
+		var params = [info.sender_id,info.id,info.title,info.content,type];
 		query(sql,params,function(error,result){
 			if(error){
 				console.log("sendMessage : "+error.message);
-				return g_vars.ERROR;
+				result = [];
 			}
 			callback(result);
 		});
 	},
 
 	/**
-	 * 将私信设置为已读
+	 * 删除私信
 	 *
-	 * @param  con_id   [私信id/（可以为数组）]
+	 * @param  id   [私信id/（可以为数组）]
 	 *
 	 * @return   [返回处理结果 成功/失败]
 	 */
-	readMessage : function(con_id,callback){
-		var sql;
-		if(con_id.length > 1){
-			sql = "update contact_info set status=1 where con_id in (?)"
-		}
-		else{
-			sql = "update contact_info set status=1 where con_id=?"; 
-		}
-		query(sql,con_id,function(error,result){
+	deleteMessage : function(id,callback){
+		var sql = `delete from contact_info where con_id=?`; 
+		query(sql,[id],function(error,result){
 			if(error){
 				console.log("readMessage : "+error.message);
 				return g_vars.ERROR;
@@ -190,15 +248,20 @@ module.exports = {
 	 * @return {[type]}   [返回筛选的私信信息]
 	 */
 	getMessage : function(info,callback){
-		var sql = "select * from contact_info where receiver_id=? and type in (?) ";
+		var sql ;
+		/* 收信 */
+		if(info.send == 0){
+			sql = `select * from contact_info where receiver_id=? and type=?`;
+		}
+		/* 发信 */
+		else{
+			sql = `select * from contact_info where sender_id=? and type=? `;			
+		}
 
-		// 获取未读私信
-		(info.kind)&&(sql +=" and status=0");
-		
 		// 按发布时间排序
-		sql += " order by publish_time desc";
+		sql += ` ORDER BY status desc,publish_time DESC`;
 
-		query(sql,[info.receiver_id,info.type],function(error,result){
+		query(sql,[info.id,info.type],function(error,result){
 			if(error){
 				console.log("getMessage : "+error.message);
 				return g_vars.ERROR;
@@ -208,6 +271,24 @@ module.exports = {
 	},
 
 
+	/**
+	 * 获取一条私信详情，同时获取收发件人信息
+	 *
+	 * @param {[type]}   id       [私信id，]
+	 * @param {[type]}   dir      [收信（0/1）发信]
+	 */
+	getOneMessage : (id,dir,callback)=>{
+		var sql = `call getOneMessage(?,?)`;
+			
+		query(sql,[id,dir],(err,result)=>{
+			if(err){
+				console.log("get one message info err : "+err.message);
+				return;
+			}
+			callback(result);
+		});
+		// })
+	},
 
 	/**
 	 * 获取 任务书,开题报告, 外文翻译, 中期答辩, 论文(草稿) 详细信息 ：
@@ -400,6 +481,37 @@ module.exports = {
 		query(sql,[tutor_id],(error,result)=>{
 			if(error){
 				console.log("get major error : "+error.message);
+				return;
+			}
+			callback(result);
+		});
+	},
+
+
+	/**
+	 * 通过关键字 获取用户信息 ：用户名，id 
+	 *
+	 * @param {[type]}   key      [关键字]
+	 * @param {[type]}   identity [身份]
+	 */
+	getUserInfo : (key,identity,callback)=>{
+		var sql;
+		key = "%"+key+"%";
+		if(identity == g_vars.ID_TUTOR){
+			sql = `select stu_name as username,stu_id as id from student_info where stu_name like '${key}'`;
+		}
+		else if(identity == g_vars.ID_STUDENT){
+			sql = `select tutor_name as username,tutor_id as id from tutor_info where tutor_name like '${key}'`;
+		}
+		else{
+			console.log(" getUserInfo: identity error");
+			callback([]);
+			return;
+		}
+		query(sql,[key],(error,result)=>{
+			if(error){
+				console.log("getUserInfo query error : "+error.message);
+				callback([]);
 				return;
 			}
 			callback(result);

@@ -143,10 +143,11 @@ module.exports = {
 		
 		// 拒绝:给学生发私信，告知已被拒绝
 		else{
-			info.title = "你申请的课题："+info.pro_name+"  被导师拒绝, 辣鸡";
+			info.title = "课题申请失败通知";
+			info.content = "你申请的课题："+info.pro_name+"  被导师拒绝, 辣鸡";
 			/* 拒绝 ： cho_id , sender, receiver,title */
-			sql = "call rejectSelectProject(?,?,?,?)";
-			params = [info.cho_id,info.tutor_id,info.stu_id,info.title];
+			sql = "call rejectSelectProject(?,?,?,?,?)";
+			params = [info.cho_id,info.tutor_id,info.stu_id,info.title,info.content];
 			query(sql,params,function(error,result){
 			if(error){
 				console.log("refuseApply : "+ error.message);
